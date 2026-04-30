@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thomas Geissler | Art Direction Vergleich</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #070707;
+        --panel: #121212;
+        --line: rgba(218, 158, 91, 0.34);
+        --text: #f5e9d8;
+        --muted: rgba(245, 233, 216, 0.74);
+        --amber: #da9e5b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+      }
+
+      body {
+        min-height: 100dvh;
+        background:
+          radial-gradient(circle at 15% 8%, rgba(218, 158, 91, 0.16), rgba(218, 158, 91, 0) 40%),
+          var(--bg);
+        color: var(--text);
+        font-family: "Outfit", sans-serif;
+      }
+
+      .wrap {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+        padding: clamp(2rem, 4vw, 4rem) 0;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        font-family: "Oswald", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+      }
+
+      h1 {
+        font-size: clamp(2.2rem, 6vw, 4.8rem);
+        line-height: 0.92;
+      }
+
+      .lead {
+        width: min(68ch, 100%);
+        margin: 1rem 0 2rem;
+        line-height: 1.75;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 1rem;
+        background: linear-gradient(180deg, rgba(218, 158, 91, 0.09), rgba(255, 255, 255, 0));
+      }
+
+      .card h2 {
+        font-size: 1.55rem;
+      }
+
+      .card p {
+        margin: 0.75rem 0 1rem;
+        color: var(--muted);
+        line-height: 1.72;
+      }
+
+      .tags {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+
+      .tag {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.32rem 0.62rem;
+        font-size: 0.71rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .btn {
+        display: inline-flex;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        padding: 0.62rem 1rem;
+        font-size: 0.92rem;
+      }
+
+      .btn--primary {
+        background: linear-gradient(130deg, #f3d2a4, var(--amber));
+        color: #2b1d10;
+        border-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>Art Direction Vergleich<br />Thomas Geissler</h1>
+      <p class="lead">
+        Drei komplett neu gebaute Richtungen im Stil deiner Referenzen: dunkles Kino-Licht,
+        starke Headline-Typo, Smoke-Atmosphaere und Bildfokus statt Standard-Weblayout.
+      </p>
+
+      <section class="grid">
+        <article class="card">
+          <h2>01 Ignition Manifesto</h2>
+          <div class="tags">
+            <span class="tag">Poster Type</span>
+            <span class="tag">Close-up Hero</span>
+            <span class="tag">Ember Light</span>
+          </div>
+          <p>Direkter Kampagnen-Look: riesige Typografie links, Cigar-Close-up rechts, visuelle Wucht.</p>
+          <a class="btn btn--primary" href="./concepts/01-nocturne-gallery/index.html">Konzept oeffnen</a>
+        </article>
+
+        <article class="card">
+          <h2>02 Conversation Chamber</h2>
+          <div class="tags">
+            <span class="tag">Dark Stage</span>
+            <span class="tag">Gold Serif</span>
+            <span class="tag">Smoke Motion</span>
+          </div>
+          <p>Zentral inszeniert wie ein Premium-Spot: Spotlight, Rauch, Objektfokus, ruhige Typografie.</p>
+          <a class="btn btn--primary" href="./concepts/02-atelier-reserve/index.html">Konzept oeffnen</a>
+        </article>
+
+        <article class="card">
+          <h2>03 Noir Journal</h2>
+          <div class="tags">
+            <span class="tag">Magazine Noir</span>
+            <span class="tag">Hero Story</span>
+            <span class="tag">Brand Editorial</span>
+          </div>
+          <p>Moderne Magazin-Dramaturgie mit Filmstrip-Gefuehl, aber ohne E-Commerce-Raster.</p>
+          <a class="btn btn--primary" href="./concepts/03-portrait-salon/index.html">Konzept oeffnen</a>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noir Journal | Zigarrenkombinat Eisenach</title>
+  <meta name="description"
+    content="Zigarrenkombinat Eisenach: persönliche Beratung für Zigarren, Wein, Spirituosen, Pairings, Tastings und Videoberatung mit Thomas Geißler." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&amp;family=Oswald:wght@400;500;700&amp;family=Sora:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <script>
+    if (new URLSearchParams(window.location.search).get("preview") === "1") {
+      document.documentElement.classList.add("preview-mode");
+    }
+  </script>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../assets/common.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <div class="gate js-age-gate" data-state="visible" aria-modal="true" role="dialog">
+    <div class="gate__card">
+      <p class="gate__eyebrow">Zigarrenkombinat Eisenach</p>
+      <h2 class="gate__title">Eintritt ab 18 Jahren</h2>
+      <p class="gate__copy">
+        Diese Website enthält Inhalte zu Zigarren, Wein und Spirituosen. Bitte bestätige, dass du volljährig bist.
+      </p>
+      <div class="gate__actions">
+        <button class="gate__btn gate__btn--yes" data-age="yes" type="button">Ja, ich bin 18+</button>
+        <button class="gate__btn gate__btn--no" data-age="no" type="button">Nein</button>
+      </div>
+      <p class="gate__note">Deine Auswahl wird für 30 Tage gespeichert.</p>
+      <p class="gate__error" data-age="error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="page-shell noir" id="top">
+    <header class="topbar reveal">
+      <a class="topbar__meta" href="../../index.html">Entwurf 03</a>
+      <a class="topbar__brand" href="#top">Zigarrenkombinat Eisenach</a>
+      <nav class="topbar__nav" aria-label="Seitennavigation">
+        <a href="#profile">Genussprofil</a>
+        <a href="#events">Tastings</a>
+        <a href="#visit">Besuch</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero reveal" aria-labelledby="hero-title">
+        <figure class="hero__media">
+          <img src="../../images/408976295_1746796703_v16_9_1200.jpeg"
+            alt="Thomas Geißler im Zigarrenkombinat Eisenach" />
+        </figure>
+        <div class="hero__shade"></div>
+        <div class="hero__content">
+          <p class="eyebrow">Noir Journal · Thomas Geißler</p>
+          <h1 id="hero-title">Ein guter Abend beginnt nicht im Warenkorb.</h1>
+          <p class="hero__lead">
+            Im Zigarrenkombinat Eisenach bekommst du Zigarren, Wein und Spirituosen mit Zeit, Haltung und einer
+            Empfehlung, die zu deinem Geschmack passt.
+          </p>
+          <div class="hero__actions" aria-label="Hauptaktionen">
+            <a class="button button--primary" href="#visit">Besuch planen</a>
+            <a class="button button--secondary" href="#video">Videoberatung</a>
+          </div>
+        </div>
+        <aside class="hero__note" aria-label="Kurzprofil">
+          <span>20-30 Min.</span>
+          <p>Beratung im Laden oder per Video. Ruhig, persönlich, ohne Verkaufsdruck.</p>
+        </aside>
+      </section>
+
+      <section class="host wrapper section reveal" id="host" aria-labelledby="host-title">
+        <div class="section-heading">
+          <p class="eyebrow">Thomas als Gastgeber</p>
+          <h2 id="host-title">Beratung beginnt mit Zuhören.</h2>
+        </div>
+        <div class="host__layout">
+          <figure class="host__portrait">
+            <img src="../../images/408976295_1746796703_v16_9_1200.jpeg"
+              alt="Thomas Geißler als Gastgeber im Zigarrenkombinat Eisenach" />
+          </figure>
+          <div class="host__story">
+            <p>
+              Thomas Geißler hat das Zigarrenkombinat nicht als Regal mit Ware gedacht, sondern als ruhigen Ort für
+              Gespräche.
+            </p>
+            <p>
+              Wer hereinkommt, soll nicht beweisen müssen, dass er sich auskennt. Thomas fragt nach Anlass, Geschmack,
+              Erfahrung und Stimmung, bevor er empfiehlt. Manchmal führt das zur ersten milden Zigarre, manchmal zu
+              einem gereiften Format oder zu einem Glas, das die Aromen erst öffnet. Seine Beratung ist direkt, aber nie
+              laut. Sie lebt von Geduld, ehrlicher Auswahl und dem Blick dafür, wann weniger Erklärung mehr Vertrauen
+              schafft.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile section reveal" id="profile" aria-labelledby="profile-title">
+        <div class="wrapper profile__intro">
+          <p class="eyebrow">Genussprofil statt Shop</p>
+          <h2 id="profile-title">Was dich erwartet.</h2>
+          <p>
+            Kein Preisraster. Kein Warenkorb. Stattdessen eine kuratierte Auswahl, die nach Anlass, Erfahrung und
+            Stimmung eingeordnet wird.
+          </p>
+        </div>
+        <div class="profile__rail" aria-label="Kuratierte Genussbereiche">
+          <article class="profile-card profile-card--wide">
+            <span>01</span>
+            <h3>Zigarre</h3>
+            <p>Formate, Herkunft, Stärke und Zugverhalten werden verständlich eingeordnet.</p>
+          </article>
+          <article class="profile-card">
+            <span>02</span>
+            <h3>Wein</h3>
+            <p>Flaschen für ruhige Abende, Gastgebergeschenke und Verkostungen.</p>
+          </article>
+          <article class="profile-card">
+            <span>03</span>
+            <h3>Spirituosen</h3>
+            <p>Rum, Whisky und Digestifs, die nicht blenden, sondern begleiten.</p>
+          </article>
+          <article class="profile-card">
+            <span>04</span>
+            <h3>Pairing</h3>
+            <p>Kombinationen, bei denen Aromen zusammenfinden, statt gegeneinander zu arbeiten.</p>
+          </article>
+          <article class="profile-card profile-card--quiet">
+            <span>05</span>
+            <h3>Atmosphäre</h3>
+            <p>Ein Ort für Fragen, Pausen und Empfehlungen ohne Kaufdruck.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="video wrapper section reveal" id="video" aria-labelledby="video-title">
+        <div class="section-heading">
+          <p class="eyebrow">Videoberatung</p>
+          <h2 id="video-title">Wenn du vorab Klarheit willst.</h2>
+        </div>
+        <div class="video__grid">
+          <article class="video__copy">
+            <p>
+              Die Videoberatung ist für Geschenkideen, die erste Orientierung, Pairing-Fragen oder eine konkrete
+              Vorbereitung auf deinen Besuch gedacht. Ein Termin dauert in der Regel 20 bis 30 Minuten.
+            </p>
+            <a class="button button--primary"
+              href="mailto:zigarrenkombinat@web.de?subject=Videoberatung%20anfragen">Videoberatung anfragen</a>
+          </article>
+          <ol class="steps">
+            <li>
+              <span>01</span>
+              <h3>Anfrage senden</h3>
+              <p>Du nennst Anlass, Zeitfenster und grob, worum es geht.</p>
+            </li>
+            <li>
+              <span>02</span>
+              <h3>Geschmack klären</h3>
+              <p>Thomas fragt nach Erfahrung, Vorlieben und dem geplanten Abend.</p>
+            </li>
+            <li>
+              <span>03</span>
+              <h3>Empfehlung erhalten</h3>
+              <p>Du gehst mit einer klaren Auswahl oder einem Besuchsplan aus dem Gespräch.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="events section reveal" id="events" aria-labelledby="events-title">
+        <div class="wrapper section-heading">
+          <p class="eyebrow">Tastings &amp; Events</p>
+          <h2 id="events-title">Abende mit Format.</h2>
+        </div>
+        <div class="event-grid wrapper">
+          <article class="event-card">
+            <p class="event-card__type">Einsteigerabend</p>
+            <h3>Ruhig anfangen.</h3>
+            <p>Grundlagen zu Formaten, Lagerung, Anschnitt und Geschmack. Für alle, die ohne Fachjargon starten
+              wollen.</p>
+            <a href="mailto:zigarrenkombinat@web.de?subject=Interesse%20am%20Einsteigerabend">Interesse anmelden</a>
+          </article>
+          <article class="event-card">
+            <p class="event-card__type">Pairing Night</p>
+            <h3>Aromen verbinden.</h3>
+            <p>Zigarre, Wein oder Spirituose werden gemeinsam probiert. Der Fokus liegt auf Balance, nicht auf Show.</p>
+            <a href="mailto:zigarrenkombinat@web.de?subject=Interesse%20an%20Pairing%20Night">Interesse anmelden</a>
+          </article>
+          <article class="event-card">
+            <p class="event-card__type">Private Runde</p>
+            <h3>Ein Abend für euch.</h3>
+            <p>Für kleine Gruppen, besondere Anlässe oder Kundenabende mit persönlicher Auswahl und Gastgeber-Präsenz.</p>
+            <a href="mailto:zigarrenkombinat@web.de?subject=Interesse%20an%20privater%20Runde">Interesse anmelden</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="journal wrapper section reveal" id="newsletter" aria-labelledby="newsletter-title">
+        <div class="journal__text">
+          <p class="eyebrow">Newsletter</p>
+          <h2 id="newsletter-title">Ein kurzer Brief aus dem Kombinat.</h2>
+          <p>
+            Reinkommt nur, was einen Besuch wert macht: neue Tasting-Termine, besondere Raritäten, ruhige Empfehlungen
+            und kurze Notizen von Thomas.
+          </p>
+        </div>
+        <form class="newsletter-form" action="mailto:zigarrenkombinat@web.de?subject=Newsletter%20Anmeldung"
+          method="post" enctype="text/plain">
+          <label for="newsletter-noir">E-Mail-Adresse</label>
+          <div class="newsletter-form__row">
+            <input id="newsletter-noir" name="email" type="email" placeholder="name@beispiel.de" required />
+            <button type="submit">Eintragen</button>
+          </div>
+          <p>
+            Datenschutz: Die Anmeldung öffnet dein E-Mail-Programm. Verschickt wird erst, wenn du die E-Mail dort
+            sendest.
+          </p>
+        </form>
+      </section>
+
+      <section class="visit wrapper section reveal" id="visit" aria-labelledby="visit-title">
+        <div class="visit__content">
+          <p class="eyebrow">Besuch &amp; Vertrauen</p>
+          <h2 id="visit-title">Georgenstraße 19 C, 99817 Eisenach</h2>
+          <p>
+            Direkt in der Innenstadt. Ideal für persönliche Beratung, Zigarren, Weinverkostungen, Tastings und gute
+            Gespräche in entspannter Umgebung.
+          </p>
+          <div class="visit__actions">
+            <a class="button button--primary"
+              href="https://maps.google.com/?q=Georgenstra%C3%9Fe+19+C,+99817+Eisenach" target="_blank"
+              rel="noreferrer">Route öffnen</a>
+            <a class="button button--secondary" href="mailto:zigarrenkombinat@web.de?subject=Besuch%20planen">Kontakt
+              aufnehmen</a>
+          </div>
+        </div>
+        <div class="visit__side">
+          <div class="hours" aria-label="Öffnungszeiten">
+            <h3>Öffnungszeiten</h3>
+            <dl>
+              <div>
+                <dt>Montag</dt>
+                <dd>11:00 bis 20:00</dd>
+              </div>
+              <div>
+                <dt>Dienstag</dt>
+                <dd>geschlossen</dd>
+              </div>
+              <div>
+                <dt>Mittwoch</dt>
+                <dd>11:00 bis 20:00</dd>
+              </div>
+              <div>
+                <dt>Donnerstag</dt>
+                <dd>11:00 bis 22:00</dd>
+              </div>
+              <div>
+                <dt>Freitag</dt>
+                <dd>11:00 bis 19:30</dd>
+              </div>
+              <div>
+                <dt>Samstag</dt>
+                <dd>11:00 bis 20:00</dd>
+              </div>
+            </dl>
+          </div>
+          <a class="map-panel" href="https://maps.google.com/?q=Georgenstra%C3%9Fe+19+C,+99817+Eisenach"
+            target="_blank" rel="noreferrer" aria-label="Karte in Google Maps öffnen">
+            <span class="map-panel__marker"></span>
+            <span class="map-panel__label">Innenstadt Eisenach</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="trust wrapper reveal" aria-label="Vertrauenspunkte">
+        <article>
+          <h3>Einsteiger willkommen.</h3>
+          <p>Fragen sind Teil der Beratung. Niemand muss Vorwissen mitbringen.</p>
+        </article>
+        <article>
+          <h3>Empfehlung mit Maß.</h3>
+          <p>Thomas empfiehlt passend zum Anlass, nicht nach Regalhöhe oder Etikett.</p>
+        </article>
+      </section>
+
+      <section class="faq wrapper section reveal" id="faq" aria-labelledby="faq-title">
+        <div class="section-heading">
+          <p class="eyebrow">FAQ</p>
+          <h2 id="faq-title">Häufige Fragen.</h2>
+        </div>
+        <div class="faq__list">
+          <details>
+            <summary>Kann ich als Anfänger kommen?</summary>
+            <p>Ja. Gerade dafür ist die Beratung gedacht. Du brauchst kein Vorwissen.</p>
+          </details>
+          <details>
+            <summary>Gibt es einen Dresscode?</summary>
+            <p>Nein. Komm so, wie du dich wohlfühlst. Der Abend soll entspannt bleiben.</p>
+          </details>
+          <details>
+            <summary>Sind Gruppen möglich?</summary>
+            <p>Ja, kleine private Runden sind möglich. Am besten vorher per E-Mail anfragen.</p>
+          </details>
+          <details>
+            <summary>Kann ich eine Zigarre als Geschenk finden?</summary>
+            <p>Ja. Mit Anlass, Budgetrahmen und ein paar Hinweisen zum Geschmack lässt sich meist schnell etwas Passendes
+              finden.</p>
+          </details>
+          <details>
+            <summary>Warum gibt es keinen Online-Shop?</summary>
+            <p>Weil hier Beratung, Anlass und Geschmack im Mittelpunkt stehen. Die Auswahl soll passen, nicht nur
+              verfügbar sein.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer wrapper">
+      <div>
+        <p>Zigarrenkombinat Eisenach · Thomas Geißler</p>
+        <p class="footer__note">Inhalte zu Tabak, Wein und Spirituosen richten sich ausschließlich an Personen ab 18
+          Jahren.</p>
+      </div>
+      <nav aria-label="Rechtliches">
+        <a href="./impressum.html">Impressum</a>
+        <a href="./datenschutz.html">Datenschutz</a>
+        <a href="./jugendschutz.html">Jugendschutz 18+</a>
+        <a href="../../index.html">Konzeptübersicht</a>
+      </nav>
+    </footer>
+  </div>
+
+  <script src="../../assets/age-gate.js" defer></script>
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.16 }
+    );
+
+    document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+  </script>
+</body>
+
+</html>

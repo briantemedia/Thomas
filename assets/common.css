@@ -1,0 +1,180 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Sora", "Outfit", "Manrope", sans-serif;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  min-height: 100dvh;
+}
+
+.preview-mode .gate {
+  display: none !important;
+}
+
+.preview-mode,
+.preview-mode body {
+  overflow: auto !important;
+}
+
+.preview-mode .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 15% 18%, rgba(236, 162, 73, 0.34), rgba(236, 162, 73, 0) 42%),
+    radial-gradient(circle at 78% 86%, rgba(79, 117, 153, 0.26), rgba(79, 117, 153, 0) 36%),
+    linear-gradient(135deg, rgba(6, 6, 6, 0.95), rgba(10, 10, 11, 0.92));
+  backdrop-filter: blur(7px);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 320ms ease, visibility 320ms ease;
+}
+
+.gate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0) 17%,
+    rgba(255, 255, 255, 0.03) 18%,
+    rgba(255, 255, 255, 0) 19%
+  );
+  pointer-events: none;
+}
+
+.gate[data-state="hidden"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gate__card {
+  position: relative;
+  width: min(560px, 100%);
+  padding: clamp(1.4rem, 2.4vw, 2.1rem);
+  border-radius: 22px;
+  border: 1px solid rgba(249, 221, 178, 0.25);
+  background:
+    linear-gradient(165deg, rgba(26, 19, 15, 0.9), rgba(14, 12, 10, 0.95)),
+    #101010;
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  color: #f5ece0;
+}
+
+.gate__eyebrow {
+  margin: 0 0 0.72rem;
+  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: rgba(245, 236, 224, 0.74);
+}
+
+.gate__title {
+  margin: 0;
+  font-family: "Cormorant Garamond", "Playfair Display", "Times New Roman", serif;
+  font-size: clamp(1.75rem, 4.9vw, 2.8rem);
+  line-height: 1.03;
+}
+
+.gate__copy {
+  margin: 1rem 0 1.3rem;
+  color: rgba(245, 236, 224, 0.83);
+  line-height: 1.62;
+}
+
+.gate__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.68rem;
+}
+
+.gate__btn {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.68rem 1.22rem;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 200ms ease, border-color 200ms ease, background-color 200ms ease;
+}
+
+.gate__btn:focus-visible {
+  outline: 2px solid #f2c889;
+  outline-offset: 2px;
+}
+
+.gate__btn--yes {
+  background: linear-gradient(135deg, #f2cf9f, #d88f47);
+  color: #26160c;
+}
+
+.gate__btn--yes:hover {
+  transform: translateY(-1px);
+}
+
+.gate__btn--no {
+  border-color: rgba(245, 236, 224, 0.34);
+  background: rgba(255, 255, 255, 0.02);
+  color: #f5ece0;
+}
+
+.gate__btn--no:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.gate__note {
+  margin: 0.9rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(245, 236, 224, 0.64);
+}
+
+.gate__error {
+  margin-top: 0.85rem;
+  min-height: 1.1em;
+  font-size: 0.88rem;
+  color: #f4a99a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

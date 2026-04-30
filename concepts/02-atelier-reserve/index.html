@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zigarrenkombinat Eisenach | Thomas Geissler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
+    rel="stylesheet" />
+  <script>
+    if (new URLSearchParams(window.location.search).get("preview") === "1") {
+      document.documentElement.classList.add("preview-mode");
+    }
+  </script>
+  <link rel="stylesheet" href="../../assets/common.css" />
+  <link rel="stylesheet" href="./style.css" />
+
+  <style>
+    :root {
+      --bg-main: #0f0e0d;
+      --bg-soft: #171513;
+      --card: rgba(255, 255, 255, 0.05);
+      --line: rgba(214, 175, 106, 0.18);
+      --gold: #d7b06d;
+      --text: #f0ece6;
+      --muted: rgba(240, 236, 230, 0.78);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+      --radius: 24px;
+      --content-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top, rgba(215, 176, 109, 0.08), transparent 30%),
+        linear-gradient(180deg, #0c0b0a 0%, #11100f 45%, #151311 100%);
+      color: var(--text);
+      font-family: "Outfit", sans-serif;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page-shell.chamber {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wrapper {
+      width: min(calc(100% - 40px), var(--content-width));
+      margin: 0 auto;
+    }
+
+    .section {
+      margin: 0 auto;
+      padding: 72px 0;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .eyebrow,
+    .hero-tag {
+      font-size: 0.84rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+      margin: 0 0 18px;
+    }
+
+    .chamber-hero {
+      position: relative;
+      min-height: 860px;
+      padding: 72px 24px 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(215, 176, 109, 0.1), transparent 34%),
+        radial-gradient(circle at 50% 65%, rgba(88, 112, 138, 0.14), transparent 18%),
+        linear-gradient(180deg, rgba(10, 9, 8, 0.92) 0%, rgba(15, 14, 13, 0.98) 100%);
+    }
+
+    .chamber-hero>* {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(circle at center, transparent 36%, rgba(0, 0, 0, 0.45) 78%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45));
+      pointer-events: none;
+    }
+
+    .hero-cigar-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-cigar-bg img {
+      width: min(1100px, 88vw);
+      max-width: none;
+      opacity: 0.18;
+      transform: translateY(110px) rotate(90deg);
+      transform-origin: center center;
+      filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.55));
+    }
+
+    .hero-smoke {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      width: 340px;
+      height: 380px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, rgba(126, 161, 198, 0.34), rgba(126, 161, 198, 0.09) 45%, transparent 72%);
+      filter: blur(22px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .chamber-hero h1 {
+      max-width: 1120px;
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      font-weight: 600;
+      font-size: clamp(3.4rem, 7vw, 6.3rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--gold);
+      text-wrap: balance;
+    }
+
+    .hero-lead {
+      max-width: 760px;
+      margin: 22px auto 0;
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-top: 34px;
+    }
+
+    .hero-actions a,
+    .visit-link,
+    .connect__card a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+    }
+
+    .hero-actions a:hover,
+    .visit-link:hover,
+    .connect__card a:hover {
+      transform: translateY(-1px);
+    }
+
+    .hero-actions .primary,
+    .visit-link,
+    .connect__card a {
+      background: rgba(215, 176, 109, 0.16);
+      color: var(--text);
+      border: 1px solid rgba(215, 176, 109, 0.28);
+    }
+
+    .hero-actions .secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .grid,
+    .signature,
+    .visit {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .grid article,
+    .signature__copy,
+    .visit>div,
+    .visit ul,
+    .advisory,
+    .connect__card,
+    .trust-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .grid article,
+    .signature__copy,
+    .visit>div {
+      padding: 34px;
+    }
+
+    .grid figure,
+    .signature__stage,
+    .filmstrip figure {
+      margin: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .grid figure img,
+    .filmstrip img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .grid h2,
+    .signature__copy h2,
+    .visit h2,
+    .advisory h2,
+    .connect__head h2,
+    .trust-intro h2 {
+      margin: 0 0 16px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.05;
+      color: var(--gold);
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 1.03rem;
+    }
+
+    .filmstrip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .filmstrip figure {
+      min-height: 260px;
+    }
+
+    .signature__stage {
+      min-height: 460px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 44px;
+      background:
+        radial-gradient(circle at center, rgba(215, 176, 109, 0.14), transparent 46%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    }
+
+    .signature__stage img {
+      max-height: 340px;
+      width: auto;
+    }
+
+    .trust-grid,
+    .connect__grid,
+    .advisory__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .trust-intro,
+    .connect__head,
+    .advisory__head {
+      margin-bottom: 24px;
+    }
+
+    .trust-card,
+    .connect__card,
+    .advisory__grid article {
+      padding: 28px;
+    }
+
+    .trust-card h3,
+    .connect__card h3,
+    .advisory__grid h3 {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: 1.2rem;
+    }
+
+    .visit ul {
+      list-style: none;
+      padding: 34px;
+      margin: 0;
+    }
+
+    .visit li+li {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .newsletter-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 220px;
+      min-height: 48px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      padding: 0 16px;
+      font: inherit;
+    }
+
+    .newsletter-form button {
+      min-height: 48px;
+      border: 1px solid rgba(215, 176, 109, 0.28);
+      background: rgba(215, 176, 109, 0.16);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 0 20px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 28px 0 42px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+
+    .advisory.section {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .advisory__head {
+      position: relative;
+      overflow: hidden;
+      margin: 0;
+      min-height: 380px;
+      padding: 34px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.62)),
+        url("../../images/zigarrenkombinat_eisenach_6.jpg") center / cover;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .advisory__head::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(215, 176, 109, 0.22), transparent 42%),
+        linear-gradient(90deg, rgba(10, 9, 8, 0.88), rgba(10, 9, 8, 0.38));
+      pointer-events: none;
+    }
+
+    .advisory__head>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    .advisory__head h2 {
+      max-width: 520px;
+      margin-bottom: 0;
+    }
+
+    .advisory__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .advisory__grid article {
+      position: relative;
+      overflow: hidden;
+      padding: 24px 26px 24px 92px;
+      min-height: 116px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(215, 176, 109, 0.09), transparent 34%),
+        rgba(255, 255, 255, 0.055);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .advisory__grid article::before {
+      position: absolute;
+      left: 26px;
+      top: 50%;
+      width: 42px;
+      height: 42px;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      border: 1px solid rgba(215, 176, 109, 0.38);
+      background: rgba(215, 176, 109, 0.12);
+      color: var(--gold);
+      display: grid;
+      place-items: center;
+      font-family: "Playfair Display", serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .advisory__grid article:nth-child(1)::before {
+      content: "01";
+    }
+
+    .advisory__grid article:nth-child(2)::before {
+      content: "02";
+    }
+
+    .advisory__grid article:nth-child(3)::before {
+      content: "03";
+    }
+
+    .advisory__grid article h3 {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-family: "Playfair Display", serif;
+      font-size: 1.3rem;
+    }
+
+    .advisory__grid article p {
+      margin: 0;
+      max-width: 620px;
+    }
+
+    @media (max-width: 980px) {
+      .advisory.section {
+        grid-template-columns: 1fr;
+      }
+
+      .advisory__head {
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .advisory__head {
+        min-height: 260px;
+        padding: 24px;
+      }
+
+      .advisory__grid article {
+        padding: 22px 22px 22px 76px;
+      }
+
+      .advisory__grid article::before {
+        left: 20px;
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @media (max-width: 980px) {
+
+      .grid,
+      .signature,
+      .visit,
+      .trust-grid,
+      .connect__grid,
+      .advisory__grid,
+      .filmstrip {
+        grid-template-columns: 1fr;
+      }
+
+      .chamber-hero {
+        min-height: 760px;
+        padding-bottom: 96px;
+      }
+
+      .hero-cigar-bg img {
+        width: min(940px, 120vw);
+        opacity: 0.16;
+        transform: translateY(120px) rotate(90deg);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrapper {
+        width: min(calc(100% - 28px), var(--content-width));
+      }
+
+      .chamber-hero {
+        min-height: 700px;
+        padding: 52px 14px 74px;
+      }
+
+      .hero-lead {
+        font-size: 1.05rem;
+      }
+
+      .hero-cigar-bg img {
+        width: 140vw;
+        opacity: 0.14;
+        transform: translateY(140px) rotate(90deg);
+      }
+
+      .grid article,
+      .signature__copy,
+      .visit>div,
+      .visit ul,
+      .trust-card,
+      .connect__card,
+      .advisory__grid article {
+        padding: 22px;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gate js-age-gate" data-state="visible" aria-modal="true" role="dialog">
+    <div class="gate__card">
+      <p class="gate__eyebrow">Zigarrenkombinat Eisenach</p>
+      <h2 class="gate__title">Eintritt ab 18 Jahren</h2>
+      <p class="gate__copy">
+        Diese Website enthaelt Inhalte zu Zigarren, Wein und Spirituosen. Zugriff nur fuer volljaehrige Besucher.
+      </p>
+      <div class="gate__actions">
+        <button class="gate__btn gate__btn--yes" data-age="yes" type="button">Ja, ich bin 18+</button>
+        <button class="gate__btn gate__btn--no" data-age="no" type="button">Nein</button>
+      </div>
+      <p class="gate__note">Deine Auswahl wird fuer 30 Tage gespeichert.</p>
+      <p class="gate__error" data-age="error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="page-shell chamber">
+    <header class="chamber-hero reveal">
+      <div class="hero-vignette" aria-hidden="true"></div>
+      <div class="hero-cigar-bg" aria-hidden="true">
+        <img src="../../images/2b3a93e813a1dc8feac5dc3faf3659df.png" alt="" />
+      </div>
+      <div class="hero-smoke" aria-hidden="true"></div>
+
+      <p class="hero-tag">Zigarrenkombinat Eisenach</p>
+      <h1>Gute Zigarren brauchen Zeit und ehrliche Beratung</h1>
+      <p class="hero-lead">
+        Bei Thomas Geissler geht es nicht um schnelle Empfehlungen. Es geht um Geschmack,
+        Erfahrung und die Ruhe, gemeinsam das Richtige zu finden. Dazu kommen Weinverkostungen,
+        Tastings und eine Atmosphäre, in der man gern bleibt.
+      </p>
+      <div class="hero-actions">
+        <a class="primary" href="#visit">Besuch planen</a>
+        <a class="secondary" href="#digital">Tasting anfragen</a>
+      </div>
+    </header>
+
+    <main class="wrapper">
+      <section class="grid section reveal">
+        <article>
+          <p class="eyebrow">Thomas Geissler</p>
+          <h2>Ein Ort fuer Menschen, die Genuss nicht dem Zufall ueberlassen</h2>
+          <p>
+            Thomas ist offen, ehrlich und fachlich sehr stark. Wer hier hereinkommt, bekommt
+            keine Show und keinen Verkaufsdruck. Stattdessen gibt es ehrliche Empfehlungen,
+            ein gutes Gespuer fuer Vorlieben und eine Beratung, die sich an dem orientiert,
+            was wirklich zu dir passt.
+          </p>
+          <p>
+            Ob Einsteiger oder Kenner, Geschenkidee oder gezielte Suche, das Ziel ist immer
+            gleich: ein stimmiges Erlebnis mit Zigarren, Wein und den richtigen Gesprächen dazu.
+          </p>
+        </article>
+        <figure>
+          <img src="../../images/considerate-agency-f5hCYk1PdA0-unsplash.jpg" alt="Zigarrenaufnahme in warmem Licht" />
+        </figure>
+      </section>
+
+      <section class="filmstrip section reveal" aria-label="Eindruecke aus dem Zigarrenkombinat">
+        <figure>
+          <img src="../../images/408976295_1746796703_v16_9_1200.jpeg" alt="Thomas Geissler im Laden" />
+        </figure>
+        <figure>
+          <img src="../../images/zigarrenkombinat_eisenach_6.jpg" alt="Innenbereich mit Zigarren und Flaschen" />
+        </figure>
+        <figure>
+          <img src="../../images/zigarrenkombinat_eisenach_8.jpg.webp" alt="Weinwand im Zigarrenkombinat Eisenach" />
+        </figure>
+      </section>
+
+      <section class="signature section reveal">
+        <figure class="signature__stage">
+          <img src="../../images/2b3a93e813a1dc8feac5dc3faf3659df.png" alt="Freigestellte Zigarre" />
+        </figure>
+        <article class="signature__copy">
+          <p class="eyebrow">Beratung mit Substanz</p>
+          <h2>Fachwissen, das Vertrauen schafft</h2>
+          <p>
+            Thomas kennt sich mit Zigarren wirklich aus. Genau das sollte die Website auch
+            ausstrahlen. Nicht ueberladen, nicht gekünstelt, sondern wertig, ruhig und glaubwuerdig.
+          </p>
+          <p>
+            Die Seite soll zeigen, dass hier jemand mit Erfahrung berät, Weinverkostungen mit
+            Sinn gestaltet und Menschen ernst nimmt, die sich für Qualität interessieren.
+          </p>
+        </article>
+      </section>
+
+      <section class="section reveal">
+        <div class="trust-intro">
+          <p class="eyebrow">Warum Menschen wiederkommen</p>
+          <h2>Mehr als nur ein Verkaufsgespräch</h2>
+        </div>
+        <div class="trust-grid">
+          <article class="trust-card">
+            <h3>Ehrliche Beratung</h3>
+            <p>
+              Keine uebertriebenen Versprechen. Nur Empfehlungen, die zu Anlass, Geschmack und Erfahrung passen.
+            </p>
+          </article>
+          <article class="trust-card">
+            <h3>Weinverkostung mit Charakter</h3>
+            <p>
+              Verkostungen und Tastings, die entspannt, persoenlich und fachlich fundiert ablaufen.
+            </p>
+          </article>
+          <article class="trust-card">
+            <h3>Angenehme Atmosphäre</h3>
+            <p>
+              Ein Ort fuer gute Gespräche, ruhige Abende und Menschen, die Genuss bewusst erleben wollen.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="visit section reveal" id="visit">
+        <div>
+          <p class="eyebrow">Besuch</p>
+          <h2>Georgenstrasse 19 C, 99817 Eisenach</h2>
+          <p>
+            Vor Ort erwartet dich eine stilvolle Umgebung mit Zeit fuer Beratung, Auswahl und
+            gute Gespräche. Ideal fuer den eigenen Genuss, als Geschenk oder fuer einen besonderen Abend.
+          </p>
+          <a class="visit-link" href="https://maps.google.com/?q=Georgenstra%C3%9Fe+19+C,+99817+Eisenach"
+            target="_blank" rel="noreferrer">Route in Google Maps</a>
+        </div>
+        <ul>
+          <li>Montag: 11:00 bis 20:00</li>
+          <li>Dienstag: geschlossen</li>
+          <li>Mittwoch: 11:00 bis 20:00</li>
+          <li>Donnerstag: 11:00 bis 22:00</li>
+          <li>Freitag: 11:00 bis 19:30</li>
+          <li>Samstag: 11:00 bis 20:00</li>
+        </ul>
+      </section>
+
+      <section class="advisory section reveal">
+        <div class="advisory__head">
+          <p class="eyebrow">Ablauf</p>
+          <h2>So laufen Beratung und Tasting ab</h2>
+        </div>
+        <div class="advisory__grid">
+          <article>
+            <h3>Kennenlernen</h3>
+            <p>Du schilderst Anlass, Geschmack oder Geschenkidee. Daraus entsteht eine passende Empfehlung.</p>
+          </article>
+          <article>
+            <h3>Auswahl</h3>
+            <p>Gemeinsam wird eingegrenzt, welche Zigarren oder Weine wirklich zu dir passen.</p>
+          </article>
+          <article>
+            <h3>Erlebnis</h3>
+            <p>Ob Beratung, Tasting oder Weinverkostung, am Ende soll es sich stimmig und hochwertig anfuehlen.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="connect section reveal" id="digital">
+        <div class="connect__head">
+          <p class="eyebrow">Digital</p>
+          <h2>Videoberatung und Newsletter</h2>
+        </div>
+        <div class="connect__grid">
+          <article class="connect__card">
+            <h3>Videoberatung</h3>
+            <p>
+              Wenn du nicht vor Ort sein kannst, ist auch eine persoenliche Beratung per Video moeglich.
+              Ideal fuer Geschenkideen, die erste Orientierung oder konkrete Fragen.
+            </p>
+            <a href="mailto:zigarrenkombinat@web.de?subject=Videoberatung%20anfragen">Termin anfragen</a>
+          </article>
+          <article class="connect__card">
+            <h3>Newsletter</h3>
+            <p>
+              Hinweise zu Tastings, Weinverkostungen, Neuheiten und besonderen Terminen direkt per E Mail.
+            </p>
+            <form action="#" method="post" class="newsletter-form">
+              <label for="newsletter-chamber" class="sr-only">E-Mail</label>
+              <input id="newsletter-chamber" name="email" type="email" placeholder="E-Mail Adresse" required />
+              <button type="submit">Eintragen</button>
+            </form>
+          </article>
+          <article class="connect__card">
+            <h3>Fuer Einsteiger und Kenner</h3>
+            <p>
+              Auch wenn du noch wenig Erfahrung hast, wirst du hier abgeholt. Wer sich bereits gut auskennt,
+              bekommt eine Beratung auf Augenhoehe.
+            </p>
+            <a href="#visit">Vorbeikommen</a>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrapper footer">
+      <p>Zigarrenkombinat Eisenach · Thomas Geissler</p>
+      <a href="../../index.html">Zur Konzeptuebersicht</a>
+    </footer>
+  </div>
+
+  <script src="../../assets/age-gate.js" defer></script>
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.16 }
+    );
+
+    document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+  </script>
+</body>
+
+</html>
