@@ -1,9 +1,9 @@
 import { useEffect, type ReactNode } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
-const HERO_IMAGE = "/images/408976295_1746796703_v16_9_1200.jpeg";
+const HERO_IMAGE = "/images/zigarrenkombinat_zigarren_sortiert.png";
 const HOST_IMAGE = "/images/zigarrenkombinat_store_panorama_treppe.jpeg";
-const ABOUT_IMAGE = "/images/zigarrenkombinat_lounge_blaue_sessel_01.jpeg";
+const ABOUT_IMAGE = "/images/rike.jpeg";
 const VIDEO_IMAGE = "/images/zigarrenkombinat_spirituosen_tasting_tisch.jpeg";
 const NEWS_IMAGE = "/images/zigarrenkombinat_store_tresen_halbtotal.jpeg";
 
@@ -146,11 +146,11 @@ function HomePage() {
         <main>
           <section className="hero reveal" aria-labelledby="hero-title">
             <figure className="hero__media">
-              <img src={HERO_IMAGE} alt="Thomas und Rike im Zigarrenkombinat Eisenach" />
+              <img src={HERO_IMAGE} alt="Rike und Thomas im Zigarrenkombinat Eisenach" />
             </figure>
             <div className="hero__shade"></div>
             <div className="hero__content">
-              <p className="eyebrow">ZIGARRENKOMBINAT · THOMAS UND RIEKE</p>
+              <p className="eyebrow">ZIGARRENKOMBINAT · RIKE UND THOMAS</p>
               <h1 id="hero-title">Ein guter Einkauf beginnt nicht im Warenkorb.</h1>
               <p className="hero__lead">
                 Zigarren, Spirituosen, Wein und Zubehör. Fachlich beraten. Präzise empfohlen.
@@ -178,14 +178,14 @@ function HomePage() {
                   Beratung beginnt mit Zuhören.
                 </h2>
                 <p>
-                  Thomas und Rike Geißler haben das Zigarrenkombinat als stilvollen Ort für allerlei Genuss aufgebaut.
+                  Rike und Thomas Geißler haben das Zigarrenkombinat als stilvollen Ort für allerlei Genuss aufgebaut.
                 </p>
                 <a className="button button--secondary" href="#visit">
                   Mehr erfahren
                 </a>
               </article>
               <figure className="host__portrait">
-                <img src={HOST_IMAGE} alt="Thomas und Rike im Fachgeschäft Zigarrenkombinat Eisenach" />
+                <img src={HOST_IMAGE} alt="Rike und Thomas im Fachgeschäft Zigarrenkombinat Eisenach" />
               </figure>
               <aside className="host__points" aria-label="Beratungs-Vorteile">
                 <ul>
@@ -208,7 +208,7 @@ function HomePage() {
                   <br />
                   Vertrauen.
                 </p>
-                <span>Thomas</span>
+                <span>Rike &amp; Thomas</span>
               </div>
             </div>
 
@@ -220,12 +220,12 @@ function HomePage() {
                   Ich nehme mir Zeit für dich, deine Wünsche und deine Fragen. Gemeinsam finden wir genau das, was zu
                   dir passt. Persönlich. Unabhängig. Mit Leidenschaft.
                 </p>
-                <p className="about-panel__signature">Thomas</p>
+                <p className="about-panel__signature">Rike &amp; Thomas</p>
                 <p className="about-panel__role">Inhaber &amp; Gründer von Zigarrenkombinat.</p>
               </article>
 
               <figure className="about-panel__polaroid">
-                <img src={ABOUT_IMAGE} alt="Thomas im Fachgeschäft Zigarrenkombinat Eisenach" />
+                <img src={ABOUT_IMAGE} alt="Rike und Thomas im Fachgeschäft Zigarrenkombinat Eisenach" />
               </figure>
             </div>
           </section>
@@ -372,7 +372,7 @@ function HomePage() {
               <article className="event-card">
                 <p className="event-card__type">Private Runde</p>
                 <h3>Ein Abend für euch.</h3>
-                <p>Für kleine Gruppen und besondere Anlässe mit persönlicher Auswahl durch Thomas und Rike.</p>
+                <p>Für kleine Gruppen und besondere Anlässe mit persönlicher Auswahl durch Rike und Thomas.</p>
                 <a href="mailto:zigarrenkombinat@web.de?subject=Verbindliche%20Zusage%20Private%20Runde">Verbindliche Zusage</a>
               </article>
             </div>
@@ -481,7 +481,7 @@ function HomePage() {
         <footer className="footer wrapper">
           <div className="footer__top">
             <div className="footer__meta">
-              <p>Zigarrenkombinat Eisenach · Thomas und Rike</p>
+              <p>Zigarrenkombinat Eisenach · Rike und Thomas</p>
               <p className="footer__note">
                 Inhalte zu Tabak, Wein und Spirituosen richten sich ausschließlich an Personen ab 18 Jahren.
               </p>
