@@ -1797,12 +1797,12 @@ p {
   }
 
   .events .section-heading {
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 
   .events .section-heading h2 {
-    margin: 0;
-    text-align: left;
+    margin: 0 0 0 auto;
+    text-align: right;
     max-width: 14ch;
     margin-top: 0.78rem;
   }
