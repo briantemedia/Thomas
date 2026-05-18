@@ -463,7 +463,7 @@ p {
   padding: 2.2rem;
   background:
     linear-gradient(180deg, rgba(10, 9, 7, 0.56), rgba(10, 9, 7, 0.64)),
-    url("/images/zigarrenkombinat_humidor_regalraum.jpeg") center / cover;
+    url("../images/zigarrenkombinat_humidor_regalraum.jpeg") center / cover;
 }
 
 .about-panel__index {
@@ -691,7 +691,7 @@ p {
   padding-top: clamp(2.8rem, 4.4vw, 4rem);
   background:
     linear-gradient(0deg, rgba(15, 13, 10, 0.78), rgba(15, 13, 10, 0.78)),
-    url("/images/Zigarren.png") center / cover,
+    url("../images/Zigarren.png") center / cover,
     linear-gradient(90deg, rgba(133, 138, 114, 0.12), transparent 28%),
     radial-gradient(circle at 14% 84%, rgba(189, 145, 96, 0.12), rgba(189, 145, 96, 0) 46%),
     var(--bg-soft);
@@ -768,7 +768,7 @@ p {
   min-height: 402px;
   background:
     linear-gradient(140deg, rgba(15, 14, 11, 0.8), rgba(15, 14, 11, 0.92)),
-    url("/images/zigarrenkombinat_weinwand_raumansicht.jpeg") center / cover;
+    url("../images/zigarrenkombinat_weinwand_raumansicht.jpeg") center / cover;
 }
 
 .profile-card--quiet {
@@ -994,7 +994,7 @@ p {
   min-height: 402px;
   background:
     linear-gradient(180deg, rgba(18, 16, 12, 0.54), rgba(18, 16, 12, 0.92)),
-    url("/images/zigarrenkombinat_event_nicaragua_display.jpeg") center / cover;
+    url("../images/zigarrenkombinat_event_nicaragua_display.jpeg") center / cover;
 }
 
 .event-card__type {

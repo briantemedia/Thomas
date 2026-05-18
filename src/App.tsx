@@ -1,11 +1,12 @@
 import { useEffect, type ReactNode } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
-const HERO_IMAGE = "/images/zigarrenkombinat_zigarren_sortiert.png";
-const HOST_IMAGE = "/images/zigarrenkombinat_store_panorama_treppe.jpeg";
-const ABOUT_IMAGE = "/images/rike.jpeg";
-const VIDEO_IMAGE = "/images/zigarrenkombinat_spirituosen_tasting_tisch.jpeg";
-const NEWS_IMAGE = "/images/zigarrenkombinat_store_tresen_halbtotal.jpeg";
+const IMG_BASE = "./images/";
+const HERO_IMAGE = `${IMG_BASE}zigarrenkombinat_zigarren_sortiert.png`;
+const HOST_IMAGE = `${IMG_BASE}zigarrenkombinat_store_panorama_treppe.jpeg`;
+const ABOUT_IMAGE = `${IMG_BASE}rike.jpeg`;
+const VIDEO_IMAGE = `${IMG_BASE}zigarrenkombinat_spirituosen_tasting_tisch.jpeg`;
+const NEWS_IMAGE = `${IMG_BASE}zigarrenkombinat_store_tresen_halbtotal.jpeg`;
 
 function usePageTitle(title: string) {
   useEffect(() => {
