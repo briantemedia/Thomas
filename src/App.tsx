@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
 const IMG_BASE = "./images/";
@@ -16,6 +16,29 @@ function usePageTitle(title: string) {
 
 function HomePage() {
   usePageTitle("ZIGARRENKOMBINAT | Eisenach");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const scrollToSection = (id: string) => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (id === "top") {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+      return;
+    }
+    const section = document.getElementById(id);
+    if (!section) return;
+    const topbar = document.querySelector<HTMLElement>(".topbar");
+    const offset = (topbar?.offsetHeight ?? 0) + 10;
+    const top = section.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+
+  const onSectionLink =
+    (id: string) =>
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      setMobileNavOpen(false);
+      scrollToSection(id);
+    };
 
   useEffect(() => {
     const STORAGE_KEY = "thomas_geissler_age_verified_until";
@@ -101,6 +124,16 @@ function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 760) {
+        setMobileNavOpen(false);
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <>
       <div className="gate js-age-gate" data-state="visible" aria-modal="true" role="dialog">
@@ -125,20 +158,35 @@ function HomePage() {
 
       <div className="page-shell" id="top">
         <header className="topbar" aria-label="Seitennavigation">
-          <nav className="topbar__nav">
-            <a className="topbar__nav-link" href="#top">
+          <a className="topbar__brand" href="#top" onClick={onSectionLink("top")}>
+            Zigarrenkombinat
+          </a>
+          <button
+            className="topbar__toggle"
+            type="button"
+            aria-expanded={mobileNavOpen}
+            aria-controls="main-nav"
+            aria-label="Menü öffnen"
+            onClick={() => setMobileNavOpen((open) => !open)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <nav id="main-nav" className={`topbar__nav${mobileNavOpen ? " is-open" : ""}`}>
+            <a className="topbar__nav-link" href="#top" onClick={onSectionLink("top")}>
               Start
             </a>
-            <a className="topbar__nav-link" href="#host">
+            <a className="topbar__nav-link" href="#host" onClick={onSectionLink("host")}>
               Beratung
             </a>
-            <a className="topbar__nav-link" href="#shop">
+            <a className="topbar__nav-link" href="#shop" onClick={onSectionLink("shop")}>
               Angebot
             </a>
-            <a className="topbar__nav-link" href="#events">
+            <a className="topbar__nav-link" href="#events" onClick={onSectionLink("events")}>
               Abende
             </a>
-            <a className="topbar__nav-link" href="#visit">
+            <a className="topbar__nav-link" href="#visit" onClick={onSectionLink("visit")}>
               Kontakt
             </a>
           </nav>
@@ -157,10 +205,10 @@ function HomePage() {
                 Zigarren, Spirituosen, Wein und Zubehör. Fachlich beraten. Präzise empfohlen.
               </p>
               <div className="hero__actions" aria-label="Hauptaktionen">
-                <a className="button button--primary" href="#visit">
+                <a className="button button--primary" href="#visit" onClick={onSectionLink("visit")}>
                   Besuch im Fachgeschäft planen
                 </a>
-                <a className="button button--secondary" href="#shop">
+                <a className="button button--secondary" href="#shop" onClick={onSectionLink("shop")}>
                   Fachgeschäft entdecken
                 </a>
               </div>
@@ -181,7 +229,7 @@ function HomePage() {
                 <p>
                   Rike und Thomas Geißler haben das Zigarrenkombinat als stilvollen Ort für allerlei Genuss aufgebaut.
                 </p>
-                <a className="button button--secondary" href="#visit">
+                <a className="button button--secondary" href="#visit" onClick={onSectionLink("visit")}>
                   Mehr erfahren
                 </a>
               </article>
@@ -475,7 +523,7 @@ function HomePage() {
 
         </main>
 
-        <a className="floating-video" href="#video" aria-label="Zur Videoberatung springen">
+        <a className="floating-video" href="#video" aria-label="Zur Videoberatung springen" onClick={onSectionLink("video")}>
           Videoberatung
         </a>
 
@@ -488,10 +536,18 @@ function HomePage() {
               </p>
             </div>
             <nav className="footer__menu" aria-label="Footer-Menü">
-              <a href="#shop">Fachgeschäft</a>
-              <a href="#profile">Genussprofil</a>
-              <a href="#host">Beratung</a>
-              <a href="#visit">Besuch</a>
+              <a href="#shop" onClick={onSectionLink("shop")}>
+                Fachgeschäft
+              </a>
+              <a href="#profile" onClick={onSectionLink("profile")}>
+                Genussprofil
+              </a>
+              <a href="#host" onClick={onSectionLink("host")}>
+                Beratung
+              </a>
+              <a href="#visit" onClick={onSectionLink("visit")}>
+                Besuch
+              </a>
             </nav>
           </div>
 
@@ -504,7 +560,9 @@ function HomePage() {
             <Link to="/impressum">Impressum</Link>
             <Link to="/datenschutz">Datenschutz</Link>
             <Link to="/jugendschutz">Jugendschutz 18+</Link>
-            <a href="#top">Startseite</a>
+            <a href="#top" onClick={onSectionLink("top")}>
+              Startseite
+            </a>
           </nav>
         </footer>
       </div>
