@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
 const IMG_BASE = "./images/";
@@ -7,6 +7,119 @@ const HOST_IMAGE = `${IMG_BASE}zigarrenkombinat_store_panorama_treppe.jpeg`;
 const ABOUT_IMAGE = `${IMG_BASE}rike.jpeg`;
 const VIDEO_IMAGE = `${IMG_BASE}zigarrenkombinat_spirituosen_tasting_tisch.jpeg`;
 const NEWS_IMAGE = `${IMG_BASE}zigarrenkombinat_store_tresen_halbtotal.jpeg`;
+const TRACKER_STORAGE_KEY = "zigarrenkombinat_call_tracker_v1";
+const TRACKER_RESULTS = ["positiv", "negativ", "nicht-erreicht"] as const;
+
+type TrackerResult = (typeof TRACKER_RESULTS)[number];
+
+type TrackerContact = {
+  id: string;
+  name: string;
+  result: TrackerResult;
+  notes: string;
+  contactedAt: string;
+};
+
+type TrackerSession = {
+  id: string;
+  startedAt: string;
+  endedAt: string | null;
+  durationSeconds: number;
+  contacts: TrackerContact[];
+};
+
+type TrackerData = {
+  version: 1;
+  sessions: TrackerSession[];
+};
+
+function defaultTrackerData(): TrackerData {
+  return { version: 1, sessions: [] };
+}
+
+function loadTrackerData(): TrackerData {
+  try {
+    const raw = localStorage.getItem(TRACKER_STORAGE_KEY);
+    if (!raw) return defaultTrackerData();
+    const parsed = JSON.parse(raw) as TrackerData;
+    if (!parsed || !Array.isArray(parsed.sessions)) return defaultTrackerData();
+    return parsed;
+  } catch {
+    return defaultTrackerData();
+  }
+}
+
+function toDate(value: string | null): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function getSessionDurationSeconds(session: TrackerSession, nowMs: number): number {
+  const started = toDate(session.startedAt);
+  if (!started) return 0;
+  if (session.endedAt) return Math.max(0, session.durationSeconds);
+  return Math.max(0, Math.floor((nowMs - started.getTime()) / 1000));
+}
+
+function getWeekStart(date: Date): Date {
+  const weekStart = new Date(date);
+  const day = weekStart.getDay();
+  const diffToMonday = (day + 6) % 7;
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(weekStart.getDate() - diffToMonday);
+  return weekStart;
+}
+
+function inCurrentDay(date: Date, now: Date): boolean {
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  );
+}
+
+function inCurrentMonth(date: Date, now: Date): boolean {
+  return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+}
+
+function inCurrentWeek(date: Date, now: Date): boolean {
+  const weekStart = getWeekStart(now);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 7);
+  return date >= weekStart && date < weekEnd;
+}
+
+type TrackerSummary = {
+  sessions: number;
+  contacts: number;
+  durationSeconds: number;
+};
+
+function summarizeSessions(
+  sessions: TrackerSession[],
+  nowMs: number,
+  filterFn: (started: Date) => boolean
+): TrackerSummary {
+  return sessions.reduce<TrackerSummary>(
+    (acc, session) => {
+      const started = toDate(session.startedAt);
+      if (!started || !filterFn(started)) return acc;
+      acc.sessions += 1;
+      acc.contacts += session.contacts.length;
+      acc.durationSeconds += getSessionDurationSeconds(session, nowMs);
+      return acc;
+    },
+    { sessions: 0, contacts: 0, durationSeconds: 0 }
+  );
+}
+
+function formatDuration(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return [hours, minutes, seconds].map((v) => String(v).padStart(2, "0")).join(":");
+}
 
 function usePageTitle(title: string) {
   useEffect(() => {
@@ -17,6 +130,17 @@ function usePageTitle(title: string) {
 function HomePage() {
   usePageTitle("ZIGARRENKOMBINAT | Eisenach");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [trackerData, setTrackerData] = useState<TrackerData>(() => loadTrackerData());
+  const [trackerName, setTrackerName] = useState("");
+  const [trackerResult, setTrackerResult] = useState<TrackerResult>("positiv");
+  const [trackerNotes, setTrackerNotes] = useState("");
+  const [trackerOpen, setTrackerOpen] = useState(false);
+  const [nowMs, setNowMs] = useState(() => Date.now());
+
+  const activeTrackerSession = useMemo(
+    () => trackerData.sessions.find((session) => !session.endedAt) ?? null,
+    [trackerData.sessions]
+  );
 
   const scrollToSection = (id: string) => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -39,6 +163,16 @@ function HomePage() {
       setMobileNavOpen(false);
       scrollToSection(id);
     };
+
+  useEffect(() => {
+    localStorage.setItem(TRACKER_STORAGE_KEY, JSON.stringify(trackerData));
+  }, [trackerData]);
+
+  useEffect(() => {
+    if (!activeTrackerSession) return;
+    const timer = window.setInterval(() => setNowMs(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [activeTrackerSession]);
 
   useEffect(() => {
     const STORAGE_KEY = "thomas_geissler_age_verified_until";
@@ -134,6 +268,74 @@ function HomePage() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  const startTrackerSession = () => {
+    if (activeTrackerSession) return;
+    const startedAt = new Date().toISOString();
+    setNowMs(Date.now());
+    setTrackerData((prev) => ({
+      ...prev,
+      sessions: [
+        ...prev.sessions,
+        {
+          id: `session-${Date.now()}`,
+          startedAt,
+          endedAt: null,
+          durationSeconds: 0,
+          contacts: []
+        }
+      ]
+    }));
+    setTrackerOpen(true);
+  };
+
+  const stopTrackerSession = () => {
+    if (!activeTrackerSession) return;
+    const now = new Date();
+    const endedAt = now.toISOString();
+    const nowMsLocal = now.getTime();
+    setTrackerData((prev) => ({
+      ...prev,
+      sessions: prev.sessions.map((session) => {
+        if (session.id !== activeTrackerSession.id) return session;
+        return {
+          ...session,
+          endedAt,
+          durationSeconds: getSessionDurationSeconds(session, nowMsLocal)
+        };
+      })
+    }));
+  };
+
+  const addTrackerContact = () => {
+    if (!activeTrackerSession) return;
+    const cleanName = trackerName.trim();
+    if (!cleanName) return;
+    const contact: TrackerContact = {
+      id: `contact-${Date.now()}`,
+      name: cleanName,
+      result: trackerResult,
+      notes: trackerNotes.trim(),
+      contactedAt: new Date().toISOString()
+    };
+    setTrackerData((prev) => ({
+      ...prev,
+      sessions: prev.sessions.map((session) => {
+        if (session.id !== activeTrackerSession.id) return session;
+        return { ...session, contacts: [contact, ...session.contacts] };
+      })
+    }));
+    setTrackerName("");
+    setTrackerResult("positiv");
+    setTrackerNotes("");
+    setTrackerOpen(true);
+  };
+
+  const nowDate = new Date(nowMs);
+  const daySummary = summarizeSessions(trackerData.sessions, nowMs, (d) => inCurrentDay(d, nowDate));
+  const weekSummary = summarizeSessions(trackerData.sessions, nowMs, (d) => inCurrentWeek(d, nowDate));
+  const monthSummary = summarizeSessions(trackerData.sessions, nowMs, (d) => inCurrentMonth(d, nowDate));
+  const activeDurationSeconds = activeTrackerSession ? getSessionDurationSeconds(activeTrackerSession, nowMs) : 0;
+
   return (
     <>
       <div className="gate js-age-gate" data-state="visible" aria-modal="true" role="dialog">
@@ -141,7 +343,8 @@ function HomePage() {
           <p className="gate__eyebrow">Zigarrenkombinat Eisenach</p>
           <h2 className="gate__title">Eintritt ab 18 Jahren</h2>
           <p className="gate__copy">
-            Diese Website enthält Inhalte zu Zigarren, Wein und Spirituosen. Bitte bestätige, dass du volljährig bist.
+            Diese Website enthält Inhalte zu Zigarren, Wein und Spirituosen. Bitte bestätigen Sie, dass Sie volljährig
+            sind.
           </p>
           <div className="gate__actions">
             <button className="gate__btn gate__btn--yes" data-age="yes" type="button">
@@ -151,7 +354,7 @@ function HomePage() {
               Nein
             </button>
           </div>
-          <p className="gate__note">Deine Auswahl wird für 30 Tage gespeichert.</p>
+          <p className="gate__note">Ihre Auswahl wird für 30 Tage gespeichert.</p>
           <p className="gate__error" data-age="error" aria-live="polite"></p>
         </div>
       </div>
@@ -195,11 +398,11 @@ function HomePage() {
         <main>
           <section className="hero reveal" aria-labelledby="hero-title">
             <figure className="hero__media">
-              <img src={HERO_IMAGE} alt="Rike und Thomas im Zigarrenkombinat Eisenach" />
+              <img src={HERO_IMAGE} alt="Rike und Thomas Geißler im Zigarrenkombinat Eisenach" />
             </figure>
             <div className="hero__shade"></div>
             <div className="hero__content">
-              <p className="eyebrow">ZIGARRENKOMBINAT · RIKE UND THOMAS</p>
+              <p className="eyebrow">ZIGARRENKOMBINAT · RIKE UND THOMAS GEIßLER</p>
               <h1 id="hero-title">Ein guter Einkauf beginnt nicht im Warenkorb.</h1>
               <p className="hero__lead">
                 Zigarren, Spirituosen, Wein und Zubehör. Fachlich beraten. Präzise empfohlen.
@@ -234,7 +437,7 @@ function HomePage() {
                 </a>
               </article>
               <figure className="host__portrait">
-                <img src={HOST_IMAGE} alt="Rike und Thomas im Fachgeschäft Zigarrenkombinat Eisenach" />
+                <img src={HOST_IMAGE} alt="Rike und Thomas Geißler im Fachgeschäft Zigarrenkombinat Eisenach" />
               </figure>
               <aside className="host__points" aria-label="Beratungs-Vorteile">
                 <ul>
@@ -257,7 +460,7 @@ function HomePage() {
                   <br />
                   Vertrauen.
                 </p>
-                <span>Rike &amp; Thomas</span>
+                <span>Rike &amp; Thomas Geißler</span>
               </div>
             </div>
 
@@ -266,15 +469,15 @@ function HomePage() {
                 <p className="eyebrow">Über mich</p>
                 <h2 id="about-panel-title">Für Menschen mit Sinn für das Echte.</h2>
                 <p>
-                  Ich nehme mir Zeit für dich, deine Wünsche und deine Fragen. Gemeinsam finden wir genau das, was zu
-                  dir passt. Persönlich. Unabhängig. Mit Leidenschaft.
+                  Ich nehme mir Zeit für Sie, Ihre Wünsche und Ihre Fragen. Gemeinsam finden wir genau das, was zu
+                  Ihnen passt. Persönlich. Unabhängig. Mit Leidenschaft.
                 </p>
-                <p className="about-panel__signature">Rike &amp; Thomas</p>
+                <p className="about-panel__signature">Rike &amp; Thomas Geißler</p>
                 <p className="about-panel__role">Inhaber &amp; Gründer von Zigarrenkombinat.</p>
               </article>
 
               <figure className="about-panel__polaroid">
-                <img src={ABOUT_IMAGE} alt="Rike und Thomas im Fachgeschäft Zigarrenkombinat Eisenach" />
+                <img src={ABOUT_IMAGE} alt="Rike und Thomas Geißler im Fachgeschäft Zigarrenkombinat Eisenach" />
               </figure>
             </div>
           </section>
@@ -283,7 +486,7 @@ function HomePage() {
             <div className="shop__head">
               <div className="section-heading">
                 <p className="eyebrow">Vor Ort erleben</p>
-                <h2 id="shop-title">Vor Ort sehen, anfassen, vergleichen.</h2>
+                <h2 id="shop-title">Vor Ort sehen, erleben, vergleichen.</h2>
               </div>
               <a
                 className="shop__visit eyebrow"
@@ -303,7 +506,7 @@ function HomePage() {
               <article>
                 <span className="shop__icon shop__icon--advice" aria-hidden="true"></span>
                 <h3>Beratung mit Herz</h3>
-                <p>Wir nehmen uns Zeit für dich und deine Wünsche.</p>
+                <p>Wir nehmen uns Zeit für Sie und Ihre Wünsche.</p>
               </article>
               <article>
                 <span className="shop__icon shop__icon--gift" aria-hidden="true"></span>
@@ -316,7 +519,7 @@ function HomePage() {
           <section className="profile section reveal" id="profile" aria-labelledby="profile-title">
             <div className="wrapper profile__intro">
               <p className="eyebrow">Genussprofil statt Shop</p>
-              <h2 id="profile-title">Dein Profil im Fokus.</h2>
+              <h2 id="profile-title">Ihr Profil im Fokus.</h2>
               <p>Für jedes Budget und jeden Geschmack das passende Produkt.</p>
             </div>
             <div className="profile__rail" aria-label="Kuratierte Genussbereiche">
@@ -379,13 +582,13 @@ function HomePage() {
                 <li>
                   <span>01</span>
                   <h3>ANFRAGE SENDEN</h3>
-                  <p>Du nennst Anlass……</p>
+                  <p>Sie nennen Anlass……</p>
                 </li>
                 <li>
                   <span>02</span>
                   <h3>GESCHMACK KLÄREN</h3>
                   <p>
-                    Wir fragen dich nach Erfahrung, Vorlieben, deiner Preisvorstellung und eventuell nach dem geplanten
+                    Wir fragen Sie nach Erfahrung, Vorlieben, Ihrer Preisvorstellung und eventuell nach dem geplanten
                     Anlass.
                   </p>
                 </li>
@@ -420,8 +623,8 @@ function HomePage() {
               </article>
               <article className="event-card">
                 <p className="event-card__type">Private Runde</p>
-                <h3>Ein Abend für euch.</h3>
-                <p>Für kleine Gruppen und besondere Anlässe mit persönlicher Auswahl durch Rike und Thomas.</p>
+                <h3>Ein Abend für Sie.</h3>
+                <p>Für kleine Gruppen und besondere Anlässe mit persönlicher Auswahl durch Rike und Thomas Geißler.</p>
                 <a href="mailto:zigarrenkombinat@web.de?subject=Verbindliche%20Zusage%20Private%20Runde">Verbindliche Zusage</a>
               </article>
             </div>
@@ -504,20 +707,6 @@ function HomePage() {
                   </div>
                 </dl>
               </div>
-              <a
-                className="map-panel"
-                href="https://maps.google.com/?q=Georgenstra%C3%9Fe+19+C,+99817+Eisenach"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Karte in Google Maps öffnen"
-              >
-                <span className="map-panel__marker"></span>
-                <span className="map-panel__label">
-                  Innenstadt
-                  <br />
-                  Eisenach
-                </span>
-              </a>
             </div>
           </section>
 
@@ -527,10 +716,97 @@ function HomePage() {
           Videoberatung
         </a>
 
+        <aside className={`tracker-panel${trackerOpen ? " is-open" : ""}`} aria-label="Session-Tracker">
+          <button
+            className="tracker-panel__toggle"
+            type="button"
+            onClick={() => setTrackerOpen((open) => !open)}
+            aria-expanded={trackerOpen}
+            aria-controls="tracker-body"
+          >
+            Tracker
+          </button>
+          <div className="tracker-panel__body" id="tracker-body">
+            <div className="tracker-panel__session">
+              <p>Aktive Session</p>
+              <strong>{activeTrackerSession ? formatDuration(activeDurationSeconds) : "Keine laufende Session"}</strong>
+              <div className="tracker-panel__buttons">
+                <button type="button" onClick={startTrackerSession} disabled={Boolean(activeTrackerSession)}>
+                  Start
+                </button>
+                <button type="button" onClick={stopTrackerSession} disabled={!activeTrackerSession}>
+                  Stop
+                </button>
+              </div>
+            </div>
+
+            <div className="tracker-panel__form">
+              <label>
+                Kontakt
+                <input
+                  type="text"
+                  value={trackerName}
+                  onChange={(event) => setTrackerName(event.target.value)}
+                  placeholder="Name oder Firma"
+                  disabled={!activeTrackerSession}
+                />
+              </label>
+              <label>
+                Ergebnis
+                <select
+                  value={trackerResult}
+                  onChange={(event) => setTrackerResult(event.target.value as TrackerResult)}
+                  disabled={!activeTrackerSession}
+                >
+                  {TRACKER_RESULTS.map((result) => (
+                    <option key={result} value={result}>
+                      {result}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Notiz
+                <input
+                  type="text"
+                  value={trackerNotes}
+                  onChange={(event) => setTrackerNotes(event.target.value)}
+                  placeholder="optional"
+                  disabled={!activeTrackerSession}
+                />
+              </label>
+              <button type="button" onClick={addTrackerContact} disabled={!activeTrackerSession || !trackerName.trim()}>
+                Kontakt speichern
+              </button>
+            </div>
+
+            <div className="tracker-panel__stats">
+              <h3>Auswertung</h3>
+              <ul>
+                <li>
+                  <span>Heute</span>
+                  <strong>{daySummary.contacts} Kontakte</strong>
+                  <small>{formatDuration(daySummary.durationSeconds)}</small>
+                </li>
+                <li>
+                  <span>Diese Woche</span>
+                  <strong>{weekSummary.contacts} Kontakte</strong>
+                  <small>{formatDuration(weekSummary.durationSeconds)}</small>
+                </li>
+                <li>
+                  <span>Diesen Monat</span>
+                  <strong>{monthSummary.contacts} Kontakte</strong>
+                  <small>{formatDuration(monthSummary.durationSeconds)}</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+
         <footer className="footer wrapper">
           <div className="footer__top">
             <div className="footer__meta">
-              <p>Zigarrenkombinat Eisenach · Rike und Thomas</p>
+              <p>Zigarrenkombinat Eisenach · Rike und Thomas Geißler</p>
               <p className="footer__note">
                 Inhalte zu Tabak, Wein und Spirituosen richten sich ausschließlich an Personen ab 18 Jahren.
               </p>
@@ -645,8 +921,8 @@ function DatenschutzPage() {
 
       <h2>Kontakt und Newsletter</h2>
       <p>
-        Anfrage- und Newsletter-Links öffnen dein E-Mail-Programm. Eine Nachricht wird erst verschickt, wenn du sie dort
-        absendest. In diesem Entwurf ist kein externer Newsletter-Dienst angebunden.
+        Anfrage- und Newsletter-Links öffnen Ihr E-Mail-Programm. Eine Nachricht wird erst verschickt, wenn Sie sie
+        dort absenden. In diesem Entwurf ist kein externer Newsletter-Dienst angebunden.
       </p>
 
       <h2>Externe Links</h2>

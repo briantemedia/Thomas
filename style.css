@@ -982,14 +982,16 @@ p {
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+  overflow: hidden;
 }
 
 .events .section-heading h2 {
   margin: 0 0 0 auto;
   text-align: right;
-  max-width: 12ch;
+  width: min(100%, 11ch);
   line-height: 1.1;
   letter-spacing: 0.015em;
+  overflow-wrap: anywhere;
 }
 
 .event-grid {
@@ -1095,7 +1097,7 @@ p {
 
 .contact-merged__row--visit {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) minmax(220px, 0.9fr);
+  grid-template-columns: minmax(300px, 1fr) minmax(240px, 0.9fr);
   gap: clamp(1rem, 2vw, 1.7rem);
   padding: clamp(1rem, 2vw, 1.8rem) 0 clamp(1rem, 2.4vw, 2rem) clamp(1rem, 2vw, 1.7rem);
   align-items: start;
@@ -1106,9 +1108,11 @@ p {
 }
 
 .contact-merged__row--visit .visit__content h2 {
-  max-width: 8.8ch;
-  font-size: clamp(2.2rem, 2.6vw, 3rem);
-  line-height: 1.02;
+  max-width: 100%;
+  font-size: clamp(1.85rem, 2.1vw, 2.35rem);
+  line-height: 1.08;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .contact-merged__row--visit .visit__actions {
@@ -1843,7 +1847,7 @@ p {
   .events .section-heading h2 {
     margin: 0 0 0 auto;
     text-align: right;
-    max-width: 14ch;
+    width: min(100%, 11ch);
     margin-top: 0.78rem;
   }
 
@@ -2046,7 +2050,7 @@ p {
 
   .events .section-heading h2 {
     width: 100%;
-    max-width: none;
+    max-width: 100%;
     margin: 0 0 0 auto;
     text-align: right;
   }
@@ -2130,6 +2134,152 @@ p {
     min-height: 42px;
     padding-inline: 0.8rem;
     font-size: 0.72rem;
+  }
+}
+
+.tracker-panel {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  width: min(360px, calc(100vw - 2rem));
+  z-index: 42;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--panel) 96%, black 4%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.tracker-panel__toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.78rem 0.9rem;
+  cursor: pointer;
+}
+
+.tracker-panel__body {
+  display: none;
+  border-top: 1px solid var(--line);
+  padding: 0.82rem 0.9rem 0.95rem;
+  gap: 0.8rem;
+}
+
+.tracker-panel.is-open .tracker-panel__body {
+  display: grid;
+}
+
+.tracker-panel__session p,
+.tracker-panel__stats h3 {
+  margin: 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.tracker-panel__session strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1rem;
+}
+
+.tracker-panel__buttons {
+  margin-top: 0.55rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.tracker-panel button,
+.tracker-panel input,
+.tracker-panel select {
+  font: inherit;
+}
+
+.tracker-panel__buttons button,
+.tracker-panel__form button {
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  min-height: 38px;
+  background: color-mix(in oklab, var(--panel-raised) 92%, black 8%);
+  color: var(--text);
+}
+
+.tracker-panel__buttons button:disabled,
+.tracker-panel__form button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tracker-panel__form {
+  display: grid;
+  gap: 0.56rem;
+}
+
+.tracker-panel__form label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.tracker-panel__form input,
+.tracker-panel__form select {
+  min-height: 36px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--panel-raised) 96%, black 4%);
+  color: var(--text);
+  padding: 0.45rem 0.62rem;
+}
+
+.tracker-panel__form button {
+  margin-top: 0.2rem;
+}
+
+.tracker-panel__stats ul {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.42rem;
+}
+
+.tracker-panel__stats li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.22rem 0.6rem;
+  align-items: baseline;
+}
+
+.tracker-panel__stats span {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.tracker-panel__stats strong {
+  font-size: 0.88rem;
+}
+
+.tracker-panel__stats small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .tracker-panel {
+    left: 0.6rem;
+    right: 0.6rem;
+    width: auto;
+    bottom: 4rem;
   }
 }
 
