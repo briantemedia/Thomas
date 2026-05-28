@@ -585,19 +585,7 @@ p {
   box-shadow:
     0 22px 48px rgba(0, 0, 0, 0.42),
     inset 0 0 0 1px rgba(20, 19, 17, 0.08);
-  transform: rotate(-2.4deg);
-}
-
-.about-panel__polaroid::before {
-  content: "";
-  position: absolute;
-  right: 2.1rem;
-  top: 1.7rem;
-  width: 92px;
-  height: 22px;
-  background: rgba(235, 205, 165, 0.62);
-  border-radius: 2px;
-  transform: rotate(5deg);
+  transform: none;
 }
 
 .about-panel__polaroid img {
@@ -980,18 +968,75 @@ p {
   width: min(1140px, calc(100% - 2rem));
   margin: 0 auto;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
   overflow: hidden;
 }
 
 .events .section-heading h2 {
-  margin: 0 0 0 auto;
-  text-align: right;
-  width: min(100%, 11ch);
+  margin: 0;
+  text-align: left;
+  width: min(100%, 17ch);
   line-height: 1.1;
   letter-spacing: 0.015em;
   overflow-wrap: anywhere;
+}
+
+.events-whatsapp {
+  margin-top: 1rem;
+}
+
+.events-whatsapp__card {
+  position: relative;
+  min-height: 420px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  overflow: hidden;
+  display: grid;
+  align-content: end;
+  gap: 0.9rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.events-whatsapp__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 9, 7, 0.1) 20%, rgba(10, 9, 7, 0.92) 80%),
+    radial-gradient(circle at 16% 12%, rgba(189, 145, 96, 0.18), rgba(189, 145, 96, 0) 44%);
+}
+
+.events-whatsapp__card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.events-whatsapp__card h3 {
+  margin-top: 0.25rem;
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+}
+
+.events-whatsapp__card p:not(.event-card__type) {
+  margin: 0;
+  color: rgba(243, 234, 220, 0.9);
+  max-width: 54ch;
+}
+
+.events-whatsapp__card a {
+  width: fit-content;
+  margin-top: 0.45rem;
+  border: 1px solid rgba(189, 145, 96, 0.34);
+  border-radius: 8px;
+  padding: 0.72rem 1rem;
+  color: #171109;
+  background: rgba(189, 145, 96, 0.96);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .event-grid {
@@ -1641,16 +1686,64 @@ p {
 }
 
 .reveal {
+  --reveal-duration: 820ms;
+  --reveal-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --reveal-offset-y: 28px;
+  --reveal-offset-x: 0px;
   opacity: 0;
-  transform: translateY(24px);
+  transform: translate3d(var(--reveal-offset-x), var(--reveal-offset-y), 0) scale(0.988);
   transition:
-    opacity 760ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 760ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity var(--reveal-duration) var(--reveal-ease),
+    transform var(--reveal-duration) var(--reveal-ease);
+  will-change: opacity, transform;
+}
+
+.reveal[data-reveal="left"] {
+  --reveal-offset-x: -24px;
+  --reveal-offset-y: 12px;
+}
+
+.reveal[data-reveal="right"] {
+  --reveal-offset-x: 24px;
+  --reveal-offset-y: 12px;
 }
 
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.reveal [data-reveal-item] {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 620ms var(--reveal-ease),
+    transform 620ms var(--reveal-ease);
+  transition-delay: calc(120ms + (var(--item-order, 0) * 95ms));
+  will-change: opacity, transform;
+}
+
+.reveal[data-reveal="left"] [data-reveal-item] {
+  transform: translate3d(-18px, 10px, 0);
+}
+
+.reveal[data-reveal="right"] [data-reveal-item] {
+  transform: translate3d(18px, 10px, 0);
+}
+
+.reveal.is-visible [data-reveal-item] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
 }
 
 .legal-main {
@@ -1800,7 +1893,7 @@ p {
 
   .about-panel__polaroid {
     justify-self: start;
-    transform: rotate(-1deg);
+    transform: none;
   }
 
   .steps {
@@ -1841,14 +1934,13 @@ p {
   }
 
   .events .section-heading {
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   .events .section-heading h2 {
-    margin: 0 0 0 auto;
-    text-align: right;
-    width: min(100%, 11ch);
-    margin-top: 0.78rem;
+    margin: 0.78rem 0 0;
+    text-align: left;
+    width: min(100%, 17ch);
   }
 
   .footer__top {
@@ -2044,19 +2136,30 @@ p {
   }
 
   .events .section-heading,
-  .event-grid {
+  .event-grid,
+  .events-whatsapp {
     width: calc(100% - 1rem);
   }
 
   .events .section-heading h2 {
     width: 100%;
     max-width: 100%;
-    margin: 0 0 0 auto;
-    text-align: right;
+    margin: 0;
+    text-align: left;
   }
 
   .event-grid {
     margin-top: 1.25rem;
+  }
+
+  .events-whatsapp__card {
+    min-height: 360px;
+    padding: 1.65rem 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .events-whatsapp__card h3 {
+    font-size: clamp(1.45rem, 8vw, 2rem);
   }
 
   .event-card {

@@ -7,6 +7,9 @@ const HOST_IMAGE = `${IMG_BASE}zigarrenkombinat_store_panorama_treppe.jpeg`;
 const ABOUT_IMAGE = `${IMG_BASE}rike.jpeg`;
 const VIDEO_IMAGE = `${IMG_BASE}zigarrenkombinat_spirituosen_tasting_tisch.jpeg`;
 const NEWS_IMAGE = `${IMG_BASE}zigarrenkombinat_store_tresen_halbtotal.jpeg`;
+const EVENTS_IMAGE = `${IMG_BASE}zigarrenkombinat_event_nicaragua_display.jpeg`;
+// TODO: Ersetzen Sie den Platzhalter durch den finalen Gruppen-Einladungslink.
+const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/";
 const TRACKER_STORAGE_KEY = "zigarrenkombinat_call_tracker_v1";
 const TRACKER_RESULTS = ["positiv", "negativ", "nicht-erreicht"] as const;
 
@@ -237,23 +240,63 @@ function HomePage() {
     yesButton?.addEventListener("click", onYes);
     noButton?.addEventListener("click", onNo);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.16 }
-    );
+    const revealSections = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealSelector = [
+      ".hero__media",
+      ".hero__content",
+      ".hero__note",
+      ".host__intro",
+      ".host__portrait",
+      ".host__points",
+      ".about-panel__left",
+      ".about-panel__right",
+      ".shop__head",
+      ".shop__grid article",
+      ".profile__intro",
+      ".profile-card",
+      ".video__media",
+      ".video__content",
+      ".steps li",
+      ".events-whatsapp__card",
+      ".contact-merged__row",
+      ".journal__visual",
+      ".hours > div"
+    ].join(", ");
 
-    document.querySelectorAll<HTMLElement>(".reveal").forEach((item) => observer.observe(item));
+    revealSections.forEach((section) => {
+      const majorItems = Array.from(section.querySelectorAll<HTMLElement>(revealSelector));
+      const fallbackItems = Array.from(section.children).filter((node): node is HTMLElement => node instanceof HTMLElement);
+      const items = majorItems.length > 0 ? majorItems : fallbackItems;
+      items.forEach((item, index) => {
+        item.dataset.revealItem = "true";
+        item.style.setProperty("--item-order", String(index));
+      });
+    });
+
+    let revealObserver: IntersectionObserver | null = null;
+
+    if (reduceMotion) {
+      revealSections.forEach((item) => item.classList.add("is-visible"));
+    } else {
+      revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            revealObserver?.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+      );
+
+      revealSections.forEach((item) => revealObserver?.observe(item));
+    }
 
     return () => {
       yesButton?.removeEventListener("click", onYes);
       noButton?.removeEventListener("click", onNo);
-      observer.disconnect();
+      revealObserver?.disconnect();
       lockPage(false);
     };
   }, []);
@@ -396,7 +439,7 @@ function HomePage() {
         </header>
 
         <main>
-          <section className="hero reveal" aria-labelledby="hero-title">
+          <section className="hero reveal" data-reveal="up" aria-labelledby="hero-title">
             <figure className="hero__media">
               <img src={HERO_IMAGE} alt="Rike und Thomas Geißler im Zigarrenkombinat Eisenach" />
             </figure>
@@ -422,7 +465,7 @@ function HomePage() {
             </aside>
           </section>
 
-          <section className="host wrapper section reveal" id="host" aria-labelledby="host-title">
+          <section className="host wrapper section reveal" id="host" data-reveal="left" aria-labelledby="host-title">
             <div className="host__layout">
               <article className="host__intro">
                 <p className="eyebrow">Das Zigarrenkombinat als Gastgeber</p>
@@ -450,7 +493,7 @@ function HomePage() {
             </div>
           </section>
 
-          <section className="about-panel reveal" id="about-panel" aria-labelledby="about-panel-title">
+          <section className="about-panel reveal" id="about-panel" data-reveal="right" aria-labelledby="about-panel-title">
             <div className="about-panel__left">
               <div className="about-panel__note">
                 <p>
@@ -466,7 +509,7 @@ function HomePage() {
 
             <div className="about-panel__right">
               <article className="about-panel__copy">
-                <p className="eyebrow">Über mich</p>
+                <p className="eyebrow">Über uns</p>
                 <h2 id="about-panel-title">Für Menschen mit Sinn für das Echte.</h2>
                 <p>
                   Ich nehme mir Zeit für Sie, Ihre Wünsche und Ihre Fragen. Gemeinsam finden wir genau das, was zu
@@ -482,7 +525,7 @@ function HomePage() {
             </div>
           </section>
 
-          <section className="shop wrapper section reveal" id="shop" aria-labelledby="shop-title">
+          <section className="shop wrapper section reveal" id="shop" data-reveal="up" aria-labelledby="shop-title">
             <div className="shop__head">
               <div className="section-heading">
                 <p className="eyebrow">Vor Ort erleben</p>
@@ -516,7 +559,7 @@ function HomePage() {
             </div>
           </section>
 
-          <section className="profile section reveal" id="profile" aria-labelledby="profile-title">
+          <section className="profile section reveal" id="profile" data-reveal="left" aria-labelledby="profile-title">
             <div className="wrapper profile__intro">
               <p className="eyebrow">Genussprofil statt Shop</p>
               <h2 id="profile-title">Ihr Profil im Fokus.</h2>
@@ -554,7 +597,7 @@ function HomePage() {
             </div>
           </section>
 
-          <section className="video wrapper section reveal" id="video" aria-labelledby="video-title">
+          <section className="video wrapper section reveal" id="video" data-reveal="right" aria-labelledby="video-title">
             <div className="video__layout">
               <figure className="video__media">
                 <img src={VIDEO_IMAGE} alt="Getränk und Zigarren auf Holztisch im Zigarrenkombinat Eisenach" />
@@ -601,36 +644,36 @@ function HomePage() {
             </div>
           </section>
 
-          <section className="events section reveal" id="events" aria-labelledby="events-title">
+          <section className="events section reveal" id="events" data-reveal="up" aria-labelledby="events-title">
             <div className="wrapper section-heading">
-              <h2 id="events-title">Events im Zigarrenkombinat</h2>
+              <h2 id="events-title">Aktuelle Termine per WhatsApp</h2>
             </div>
-            <div className="event-grid wrapper">
-              <article className="event-card">
-                <p className="event-card__type">Einsteigerabend</p>
-                <h3>Ruhig anfangen.</h3>
+            <div className="events-whatsapp wrapper">
+              <article className="events-whatsapp__card" style={{ backgroundImage: `url(${EVENTS_IMAGE})` }}>
+                <p className="event-card__type">WhatsApp-Gruppe</p>
+                <h3>Alle Events auf einen Blick.</h3>
                 <p>
-                  Grundlagen zu Formaten, Lagerung, Anschnitt und Geschmack. Für alle, die ohne Fachjargon starten
-                  wollen.
+                  Alle Tasting-Termine, Zigarrenlausch-Abende und kurzfristigen Plätze finden Sie in unserer
+                  WhatsApp-Gruppe. So sind Sie direkt informiert, sobald neue Termine feststehen.
                 </p>
-                <a href="mailto:zigarrenkombinat@web.de?subject=Verbindliche%20Zusage%20Einsteigerabend">Verbindliche Zusage</a>
-              </article>
-              <article className="event-card">
-                <p className="event-card__type">Zigarrenlausch</p>
-                <h3>Hören, fragen, probieren.</h3>
-                <p>Ein ruhiger Abend mit Gespräch, Hintergrundwissen und passender Auswahl aus dem Fachgeschäft.</p>
-                <a href="mailto:zigarrenkombinat@web.de?subject=Verbindliche%20Zusage%20Zigarrenlausch">Verbindliche Zusage</a>
-              </article>
-              <article className="event-card">
-                <p className="event-card__type">Private Runde</p>
-                <h3>Ein Abend für Sie.</h3>
-                <p>Für kleine Gruppen und besondere Anlässe mit persönlicher Auswahl durch Rike und Thomas Geißler.</p>
-                <a href="mailto:zigarrenkombinat@web.de?subject=Verbindliche%20Zusage%20Private%20Runde">Verbindliche Zusage</a>
+                <a
+                  href={WHATSAPP_GROUP_LINK}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Zur WhatsApp-Gruppe wechseln"
+                >
+                  Zur WhatsApp-Gruppe
+                </a>
               </article>
             </div>
           </section>
 
-          <section className="contact-merged wrapper section reveal" id="newsletter-visit" aria-label="Newsletter und Besuch">
+          <section
+            className="contact-merged wrapper section reveal"
+            id="newsletter-visit"
+            data-reveal="left"
+            aria-label="Newsletter und Besuch"
+          >
             <div className="contact-merged__row contact-merged__row--newsletter" id="newsletter" aria-labelledby="newsletter-title">
               <div className="journal__text">
                 <p className="eyebrow">Newsletter</p>
@@ -683,19 +726,19 @@ function HomePage() {
                 <dl>
                   <div>
                     <dt>Montag</dt>
-                    <dd>Nach Termin</dd>
+                    <dd>11:00-18:00 Uhr</dd>
                   </div>
                   <div>
                     <dt>Dienstag</dt>
-                    <dd>Nach Termin</dd>
+                    <dd>Nach Vereinbarung</dd>
                   </div>
                   <div>
                     <dt>Mittwoch</dt>
-                    <dd>11:00-19:00 Uhr</dd>
+                    <dd>11:00-18:00 Uhr</dd>
                   </div>
                   <div>
                     <dt>Donnerstag</dt>
-                    <dd>11:00-19:00 Uhr</dd>
+                    <dd>11:00-18:00 Uhr</dd>
                   </div>
                   <div>
                     <dt>Freitag</dt>
