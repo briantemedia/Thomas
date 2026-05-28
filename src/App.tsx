@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
 const IMG_BASE = "./images/";
@@ -10,119 +10,6 @@ const NEWS_IMAGE = `${IMG_BASE}zigarrenkombinat_store_tresen_halbtotal.jpeg`;
 const EVENTS_IMAGE = `${IMG_BASE}zigarrenkombinat_event_nicaragua_display.jpeg`;
 // TODO: Ersetzen Sie den Platzhalter durch den finalen Gruppen-Einladungslink.
 const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/";
-const TRACKER_STORAGE_KEY = "zigarrenkombinat_call_tracker_v1";
-const TRACKER_RESULTS = ["positiv", "negativ", "nicht-erreicht"] as const;
-
-type TrackerResult = (typeof TRACKER_RESULTS)[number];
-
-type TrackerContact = {
-  id: string;
-  name: string;
-  result: TrackerResult;
-  notes: string;
-  contactedAt: string;
-};
-
-type TrackerSession = {
-  id: string;
-  startedAt: string;
-  endedAt: string | null;
-  durationSeconds: number;
-  contacts: TrackerContact[];
-};
-
-type TrackerData = {
-  version: 1;
-  sessions: TrackerSession[];
-};
-
-function defaultTrackerData(): TrackerData {
-  return { version: 1, sessions: [] };
-}
-
-function loadTrackerData(): TrackerData {
-  try {
-    const raw = localStorage.getItem(TRACKER_STORAGE_KEY);
-    if (!raw) return defaultTrackerData();
-    const parsed = JSON.parse(raw) as TrackerData;
-    if (!parsed || !Array.isArray(parsed.sessions)) return defaultTrackerData();
-    return parsed;
-  } catch {
-    return defaultTrackerData();
-  }
-}
-
-function toDate(value: string | null): Date | null {
-  if (!value) return null;
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function getSessionDurationSeconds(session: TrackerSession, nowMs: number): number {
-  const started = toDate(session.startedAt);
-  if (!started) return 0;
-  if (session.endedAt) return Math.max(0, session.durationSeconds);
-  return Math.max(0, Math.floor((nowMs - started.getTime()) / 1000));
-}
-
-function getWeekStart(date: Date): Date {
-  const weekStart = new Date(date);
-  const day = weekStart.getDay();
-  const diffToMonday = (day + 6) % 7;
-  weekStart.setHours(0, 0, 0, 0);
-  weekStart.setDate(weekStart.getDate() - diffToMonday);
-  return weekStart;
-}
-
-function inCurrentDay(date: Date, now: Date): boolean {
-  return (
-    date.getFullYear() === now.getFullYear() &&
-    date.getMonth() === now.getMonth() &&
-    date.getDate() === now.getDate()
-  );
-}
-
-function inCurrentMonth(date: Date, now: Date): boolean {
-  return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
-}
-
-function inCurrentWeek(date: Date, now: Date): boolean {
-  const weekStart = getWeekStart(now);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 7);
-  return date >= weekStart && date < weekEnd;
-}
-
-type TrackerSummary = {
-  sessions: number;
-  contacts: number;
-  durationSeconds: number;
-};
-
-function summarizeSessions(
-  sessions: TrackerSession[],
-  nowMs: number,
-  filterFn: (started: Date) => boolean
-): TrackerSummary {
-  return sessions.reduce<TrackerSummary>(
-    (acc, session) => {
-      const started = toDate(session.startedAt);
-      if (!started || !filterFn(started)) return acc;
-      acc.sessions += 1;
-      acc.contacts += session.contacts.length;
-      acc.durationSeconds += getSessionDurationSeconds(session, nowMs);
-      return acc;
-    },
-    { sessions: 0, contacts: 0, durationSeconds: 0 }
-  );
-}
-
-function formatDuration(totalSeconds: number): string {
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  return [hours, minutes, seconds].map((v) => String(v).padStart(2, "0")).join(":");
-}
 
 function usePageTitle(title: string) {
   useEffect(() => {
@@ -133,17 +20,6 @@ function usePageTitle(title: string) {
 function HomePage() {
   usePageTitle("ZIGARRENKOMBINAT | Eisenach");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [trackerData, setTrackerData] = useState<TrackerData>(() => loadTrackerData());
-  const [trackerName, setTrackerName] = useState("");
-  const [trackerResult, setTrackerResult] = useState<TrackerResult>("positiv");
-  const [trackerNotes, setTrackerNotes] = useState("");
-  const [trackerOpen, setTrackerOpen] = useState(false);
-  const [nowMs, setNowMs] = useState(() => Date.now());
-
-  const activeTrackerSession = useMemo(
-    () => trackerData.sessions.find((session) => !session.endedAt) ?? null,
-    [trackerData.sessions]
-  );
 
   const scrollToSection = (id: string) => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -166,16 +42,6 @@ function HomePage() {
       setMobileNavOpen(false);
       scrollToSection(id);
     };
-
-  useEffect(() => {
-    localStorage.setItem(TRACKER_STORAGE_KEY, JSON.stringify(trackerData));
-  }, [trackerData]);
-
-  useEffect(() => {
-    if (!activeTrackerSession) return;
-    const timer = window.setInterval(() => setNowMs(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, [activeTrackerSession]);
 
   useEffect(() => {
     const STORAGE_KEY = "thomas_geissler_age_verified_until";
@@ -310,74 +176,6 @@ function HomePage() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-
-  const startTrackerSession = () => {
-    if (activeTrackerSession) return;
-    const startedAt = new Date().toISOString();
-    setNowMs(Date.now());
-    setTrackerData((prev) => ({
-      ...prev,
-      sessions: [
-        ...prev.sessions,
-        {
-          id: `session-${Date.now()}`,
-          startedAt,
-          endedAt: null,
-          durationSeconds: 0,
-          contacts: []
-        }
-      ]
-    }));
-    setTrackerOpen(true);
-  };
-
-  const stopTrackerSession = () => {
-    if (!activeTrackerSession) return;
-    const now = new Date();
-    const endedAt = now.toISOString();
-    const nowMsLocal = now.getTime();
-    setTrackerData((prev) => ({
-      ...prev,
-      sessions: prev.sessions.map((session) => {
-        if (session.id !== activeTrackerSession.id) return session;
-        return {
-          ...session,
-          endedAt,
-          durationSeconds: getSessionDurationSeconds(session, nowMsLocal)
-        };
-      })
-    }));
-  };
-
-  const addTrackerContact = () => {
-    if (!activeTrackerSession) return;
-    const cleanName = trackerName.trim();
-    if (!cleanName) return;
-    const contact: TrackerContact = {
-      id: `contact-${Date.now()}`,
-      name: cleanName,
-      result: trackerResult,
-      notes: trackerNotes.trim(),
-      contactedAt: new Date().toISOString()
-    };
-    setTrackerData((prev) => ({
-      ...prev,
-      sessions: prev.sessions.map((session) => {
-        if (session.id !== activeTrackerSession.id) return session;
-        return { ...session, contacts: [contact, ...session.contacts] };
-      })
-    }));
-    setTrackerName("");
-    setTrackerResult("positiv");
-    setTrackerNotes("");
-    setTrackerOpen(true);
-  };
-
-  const nowDate = new Date(nowMs);
-  const daySummary = summarizeSessions(trackerData.sessions, nowMs, (d) => inCurrentDay(d, nowDate));
-  const weekSummary = summarizeSessions(trackerData.sessions, nowMs, (d) => inCurrentWeek(d, nowDate));
-  const monthSummary = summarizeSessions(trackerData.sessions, nowMs, (d) => inCurrentMonth(d, nowDate));
-  const activeDurationSeconds = activeTrackerSession ? getSessionDurationSeconds(activeTrackerSession, nowMs) : 0;
 
   return (
     <>
@@ -758,93 +556,6 @@ function HomePage() {
         <a className="floating-video" href="#video" aria-label="Zur Videoberatung springen" onClick={onSectionLink("video")}>
           Videoberatung
         </a>
-
-        <aside className={`tracker-panel${trackerOpen ? " is-open" : ""}`} aria-label="Session-Tracker">
-          <button
-            className="tracker-panel__toggle"
-            type="button"
-            onClick={() => setTrackerOpen((open) => !open)}
-            aria-expanded={trackerOpen}
-            aria-controls="tracker-body"
-          >
-            Tracker
-          </button>
-          <div className="tracker-panel__body" id="tracker-body">
-            <div className="tracker-panel__session">
-              <p>Aktive Session</p>
-              <strong>{activeTrackerSession ? formatDuration(activeDurationSeconds) : "Keine laufende Session"}</strong>
-              <div className="tracker-panel__buttons">
-                <button type="button" onClick={startTrackerSession} disabled={Boolean(activeTrackerSession)}>
-                  Start
-                </button>
-                <button type="button" onClick={stopTrackerSession} disabled={!activeTrackerSession}>
-                  Stop
-                </button>
-              </div>
-            </div>
-
-            <div className="tracker-panel__form">
-              <label>
-                Kontakt
-                <input
-                  type="text"
-                  value={trackerName}
-                  onChange={(event) => setTrackerName(event.target.value)}
-                  placeholder="Name oder Firma"
-                  disabled={!activeTrackerSession}
-                />
-              </label>
-              <label>
-                Ergebnis
-                <select
-                  value={trackerResult}
-                  onChange={(event) => setTrackerResult(event.target.value as TrackerResult)}
-                  disabled={!activeTrackerSession}
-                >
-                  {TRACKER_RESULTS.map((result) => (
-                    <option key={result} value={result}>
-                      {result}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Notiz
-                <input
-                  type="text"
-                  value={trackerNotes}
-                  onChange={(event) => setTrackerNotes(event.target.value)}
-                  placeholder="optional"
-                  disabled={!activeTrackerSession}
-                />
-              </label>
-              <button type="button" onClick={addTrackerContact} disabled={!activeTrackerSession || !trackerName.trim()}>
-                Kontakt speichern
-              </button>
-            </div>
-
-            <div className="tracker-panel__stats">
-              <h3>Auswertung</h3>
-              <ul>
-                <li>
-                  <span>Heute</span>
-                  <strong>{daySummary.contacts} Kontakte</strong>
-                  <small>{formatDuration(daySummary.durationSeconds)}</small>
-                </li>
-                <li>
-                  <span>Diese Woche</span>
-                  <strong>{weekSummary.contacts} Kontakte</strong>
-                  <small>{formatDuration(weekSummary.durationSeconds)}</small>
-                </li>
-                <li>
-                  <span>Diesen Monat</span>
-                  <strong>{monthSummary.contacts} Kontakte</strong>
-                  <small>{formatDuration(monthSummary.durationSeconds)}</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </aside>
 
         <footer className="footer wrapper">
           <div className="footer__top">
