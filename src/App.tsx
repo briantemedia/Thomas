@@ -630,15 +630,13 @@ function ImpressumPage() {
     <LegalPage eyebrow="Rechtliches" title="Impressum">
       <h2>Angaben gemäß § 5 DDG</h2>
       <address>
-        Zigarrenkombinat Eisenach
+        Zigarrenkombinat
         <br />
-        Thomas Geißler
+        Inhaber: Thomas Geißler
         <br />
-        Georgenstraße 19 C
+        Georgenstraße 19c
         <br />
         99817 Eisenach
-        <br />
-        Deutschland
       </address>
 
       <h2>Kontakt</h2>
@@ -646,13 +644,16 @@ function ImpressumPage() {
         E-Mail: <a href="mailto:zigarrenkombinat@web.de">zigarrenkombinat@web.de</a>
       </p>
 
-      <h2>Verantwortlich für den Inhalt</h2>
-      <p>Thomas Geißler, Anschrift wie oben.</p>
+      <h2>Steuerliche Angaben</h2>
+      <p>Zuständiges Gericht: AG Eisenach</p>
+      <p>Zuständiges Finanzamt: FA Eisenach</p>
+      <p>Steuernummer: 155/223/02209</p>
+      <p>USt-IdNr.: DE454572983</p>
 
-      <h2>Hinweis vor Veröffentlichung</h2>
+      <h2>Hinweis zur Verantwortlichkeit</h2>
       <p>
-        Dieser Entwurf ersetzt keine juristische Prüfung. Telefonnummer, Umsatzsteuerangaben und weitere Pflichtangaben
-        müssen vor Livegang ergänzt werden, falls sie für das Unternehmen zutreffen.
+        Die Seite enthält derzeit keine journalistisch-redaktionellen Inhalte. Falls solche Inhalte später ergänzt
+        werden, kann eine zusätzliche Benennung nach § 18 Abs. 2 MStV erforderlich werden.
       </p>
     </LegalPage>
   );
@@ -660,32 +661,70 @@ function ImpressumPage() {
 
 function DatenschutzPage() {
   return (
-    <LegalPage eyebrow="Rechtliches" title="Datenschutz">
-      <h2>Verantwortlicher</h2>
+    <LegalPage eyebrow="Rechtliches" title="Datenschutzerklärung">
+      <h2>1. Datenschutz auf einen Blick</h2>
+      <h3>Allgemeine Hinweise</h3>
       <p>
-        Verantwortlich für diese Website ist Thomas Geißler, Zigarrenkombinat Eisenach, Georgenstraße 19 C, 99817
-        Eisenach. Kontakt: <a href="mailto:zigarrenkombinat@web.de">zigarrenkombinat@web.de</a>.
+        Die folgenden Hinweise geben Ihnen einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten
+        passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich
+        identifiziert werden können.
       </p>
 
-      <h2>Altersbestätigung</h2>
+      <h3>Datenerfassung auf dieser Website</h3>
+      <ul>
+        <li>Verantwortlich für die Datenverarbeitung ist der Websitebetreiber. Die Kontaktdaten finden Sie im Impressum.</li>
+        <li>Beim Aufruf der Website verarbeitet der Hosting-Anbieter technisch notwendige Daten, damit die Seite ausgeliefert und abgesichert werden kann.</li>
+        <li>Die Altersbestätigung wird lokal im Browser für 30 Tage gespeichert. Wir setzen dafür keine eigenen Analyse- oder Tracking-Cookies ein.</li>
+      </ul>
+
+      <h3>Ihre Rechte</h3>
       <p>
-        Die Website speichert die Altersbestätigung lokal im Browser. Der Eintrag wird für 30 Tage gespeichert und dient
-        nur dazu, die 18+-Abfrage nicht bei jedem Seitenaufruf erneut zu zeigen.
+        Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch sowie
+        Datenübertragbarkeit, soweit die gesetzlichen Voraussetzungen vorliegen.
       </p>
 
-      <h2>Kontakt und Newsletter</h2>
+      <h2>2. Verantwortlicher</h2>
       <p>
-        Anfrage- und Newsletter-Links öffnen Ihr E-Mail-Programm. Eine Nachricht wird erst verschickt, wenn Sie sie
-        dort absenden. In diesem Entwurf ist kein externer Newsletter-Dienst angebunden.
+        Verantwortlich für diese Website ist Thomas Geißler, Zigarrenkombinat, Georgenstraße 19c, 99817 Eisenach.
+        Kontakt: <a href="mailto:zigarrenkombinat@web.de">zigarrenkombinat@web.de</a>.
       </p>
 
-      <h2>Externe Links</h2>
-      <p>Der Routen-Link führt zu Google Maps. Beim Öffnen gelten die Datenschutzregeln des jeweiligen Anbieters.</p>
-
-      <h2>Livegang-Hinweis</h2>
+      <h2>3. Hosting</h2>
       <p>
-        Vor Veröffentlichung müssen Newsletter-Double-Opt-in, Analyse-Tools, Hosting, Cookies und Auftragsverarbeitung
-        konkret geprüft und in dieser Erklärung ergänzt werden, falls solche Dienste eingesetzt werden.
+        Diese Website wird bei <strong>Vercel Inc.</strong>, 440 N Barranca Avenue #4133, Covina, CA 91723, United
+        States gehostet. Vercel verarbeitet dabei im Rahmen der Bereitstellung und Absicherung der Website technische
+        Daten. Weitere Informationen finden Sie in der
+        <a href="https://vercel.com/legal/privacy-notice" target="_blank" rel="noreferrer">
+          Datenschutzerklärung von Vercel
+        </a>
+        und im
+        <a href="https://vercel.com/legal/dpa" target="_blank" rel="noreferrer">
+          Data Processing Addendum
+        </a>
+        . Vercel weist zudem auf eine Verarbeitung in den USA und eine Zertifizierung nach dem EU-U.S. Data Privacy
+        Framework hin.
+      </p>
+
+      <h2>4. Kontakt und Newsletter</h2>
+      <p>
+        Wenn Sie uns per E-Mail kontaktieren oder die Newsletter-Funktion nutzen, werden die von Ihnen angegebenen
+        Daten zur Bearbeitung Ihrer Anfrage verarbeitet. Die Eingabe öffnet Ihr E-Mail-Programm; eine Nachricht wird
+        erst versendet, wenn Sie sie dort absenden.
+      </p>
+
+      <h2>5. Externe Dienste und Links</h2>
+      <p>
+        Unsere WhatsApp-Verlinkung und der Routen-Link zu Google Maps führen zu externen Anbietern. Beim Öffnen dieser
+        Links gelten die Datenschutzbestimmungen des jeweiligen Anbieters.
+      </p>
+
+      <h2>6. Beschwerderecht</h2>
+      <p>
+        Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren. Für Thüringen ist dies der
+        <a href="https://tlfdi.de/" target="_blank" rel="noreferrer">
+          Thüringer Landesbeauftragte für den Datenschutz und die Informationsfreiheit (TLfDI)
+        </a>
+        .
       </p>
     </LegalPage>
   );
