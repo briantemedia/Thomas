@@ -44,8 +44,6 @@ function HomePage() {
     };
 
   useEffect(() => {
-    const STORAGE_KEY = "thomas_geissler_age_verified_until";
-    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
     const gate = document.querySelector<HTMLElement>(".js-age-gate");
     const yesButton = gate?.querySelector<HTMLButtonElement>("[data-age='yes']");
     const noButton = gate?.querySelector<HTMLButtonElement>("[data-age='no']");
@@ -59,18 +57,6 @@ function HomePage() {
       document.body.style.overflow = lock ? "hidden" : "";
     };
 
-    const getExpiry = () => {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const parsed = raw ? Number(raw) : 0;
-      return Number.isFinite(parsed) ? parsed : 0;
-    };
-
-    const isVerified = () => getExpiry() > Date.now();
-
-    const storeVerification = () => {
-      localStorage.setItem(STORAGE_KEY, String(Date.now() + THIRTY_DAYS_MS));
-    };
-
     const hideGate = () => {
       if (gate) {
         gate.dataset.state = "hidden";
@@ -81,7 +67,7 @@ function HomePage() {
     document.documentElement.classList.toggle("preview-mode", previewMode);
 
     if (gate) {
-      if (previewMode || isVerified()) {
+      if (previewMode) {
         hideGate();
       } else {
         gate.dataset.state = "visible";
@@ -90,7 +76,6 @@ function HomePage() {
     }
 
     const onYes = () => {
-      storeVerification();
       hideGate();
       if (errorNode) {
         errorNode.textContent = "";
@@ -195,7 +180,7 @@ function HomePage() {
               Nein
             </button>
           </div>
-          <p className="gate__note">Ihre Auswahl wird für 30 Tage gespeichert.</p>
+          <p className="gate__note">Ihre Auswahl gilt nur für diesen Besuch.</p>
           <p className="gate__error" data-age="error" aria-live="polite"></p>
         </div>
       </div>
@@ -674,7 +659,8 @@ function DatenschutzPage() {
       <ul>
         <li>Verantwortlich für die Datenverarbeitung ist der Websitebetreiber. Die Kontaktdaten finden Sie im Impressum.</li>
         <li>Beim Aufruf der Website verarbeitet der Hosting-Anbieter technisch notwendige Daten, damit die Seite ausgeliefert und abgesichert werden kann.</li>
-        <li>Die Altersbestätigung wird lokal im Browser für 30 Tage gespeichert. Wir setzen dafür keine eigenen Analyse- oder Tracking-Cookies ein.</li>
+        <li>Die Altersbestätigung wird nur für den aktuellen Besuch abgefragt. Es werden dafür keine Cookies oder dauerhaft gespeicherten Einträge gesetzt.</li>
+        <li>Schriften werden lokal ausgeliefert. Die Seite lädt keine Google Fonts oder andere externe Font-CDNs.</li>
       </ul>
 
       <h3>Ihre Rechte</h3>
