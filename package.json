@@ -6,9 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tracker:start": "node scripts/session-tracker.mjs start",
+    "tracker:contact": "node scripts/session-tracker.mjs contact",
+    "tracker:stop": "node scripts/session-tracker.mjs stop",
+    "tracker:report": "node scripts/session-tracker.mjs report",
+    "tracker:report:all": "node scripts/session-tracker.mjs report all"
   },
   "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.2.11",
+    "@fontsource/lora": "^5.2.8",
+    "@fontsource/oswald": "^5.2.8",
+    "@fontsource/sora": "^5.2.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.1"
