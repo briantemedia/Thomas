@@ -30,6 +30,15 @@ a {
   min-height: 100dvh;
 }
 
+.app-content {
+  min-height: 100dvh;
+}
+
+.app-content[inert] {
+  pointer-events: none;
+  user-select: none;
+}
+
 .preview-mode .gate {
   display: none !important;
 }
