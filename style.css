@@ -15,6 +15,9 @@
   --sage-soft: rgba(133, 138, 114, 0.18);
   --ink: #232833;
   --focus: #e1bd82;
+  --font-body: "Sora", "Avenir Next", Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-display: "Oswald", "Arial Narrow", "Helvetica Neue Condensed", "Avenir Next Condensed", "Segoe UI", Arial, sans-serif;
+  --font-serif: "Lora", Georgia, "Times New Roman", serif;
 }
 
 html {
@@ -40,7 +43,7 @@ body {
     linear-gradient(90deg, rgba(189, 145, 96, 0.08), transparent 32%),
     linear-gradient(180deg, #0d0c09 0%, var(--bg) 42%, #0b0a08 100%);
   color: var(--text);
-  font-family: "Sora", sans-serif;
+  font-family: var(--font-body);
 }
 
 body::before {
@@ -235,7 +238,7 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: 0.015em;
   line-height: 1.1;
@@ -243,7 +246,7 @@ h3 {
 }
 
 h1 {
-  max-width: 11ch;
+  max-width: 16ch;
   margin-top: 0.9rem;
   font-size: 4.7rem;
   text-wrap: balance;
@@ -332,7 +335,7 @@ p {
 .hero__note span {
   display: block;
   color: var(--accent);
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.45rem;
   line-height: 1;
   text-transform: uppercase;
@@ -485,7 +488,7 @@ p {
   padding: 2.2rem;
   background:
     linear-gradient(180deg, rgba(10, 9, 7, 0.56), rgba(10, 9, 7, 0.64)),
-    url("../images/zigarrenkombinat_humidor_regalraum.jpeg") center / cover;
+    url("/images/zigarrenkombinat_humidor_regalraum.jpeg") center / cover;
 }
 
 .about-panel__index {
@@ -493,7 +496,7 @@ p {
   left: 2rem;
   top: 2rem;
   color: var(--accent);
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-size: 2.2rem;
   line-height: 1;
 }
@@ -520,7 +523,7 @@ p {
 .about-panel__note p {
   margin: 0;
   color: rgba(243, 234, 220, 0.82);
-  font-family: "Lora", serif;
+  font-family: var(--font-serif);
   font-size: 2rem;
   line-height: 1.22;
   font-style: italic;
@@ -530,7 +533,7 @@ p {
   display: inline-block;
   margin-top: 1.3rem;
   color: rgba(243, 234, 220, 0.76);
-  font-family: "Lora", serif;
+  font-family: var(--font-serif);
   font-size: 2.15rem;
   line-height: 1;
   font-style: italic;
@@ -563,7 +566,7 @@ p {
 .about-panel__signature {
   margin-top: 1.2rem !important;
   color: var(--accent) !important;
-  font-family: "Lora", serif;
+  font-family: var(--font-serif);
   font-size: 3.15rem;
   line-height: 0.95;
   font-style: italic;
@@ -701,7 +704,7 @@ p {
   padding-top: clamp(2.8rem, 4.4vw, 4rem);
   background:
     linear-gradient(0deg, rgba(15, 13, 10, 0.78), rgba(15, 13, 10, 0.78)),
-    url("../images/Zigarren.png") center / cover,
+    url("/images/Zigarren.png") center / cover,
     linear-gradient(90deg, rgba(133, 138, 114, 0.12), transparent 28%),
     radial-gradient(circle at 14% 84%, rgba(189, 145, 96, 0.12), rgba(189, 145, 96, 0) 46%),
     var(--bg-soft);
@@ -778,7 +781,7 @@ p {
   min-height: 402px;
   background:
     linear-gradient(140deg, rgba(15, 14, 11, 0.8), rgba(15, 14, 11, 0.92)),
-    url("../images/zigarrenkombinat_weinwand_raumansicht.jpeg") center / cover;
+    url("/images/zigarrenkombinat_weinwand_raumansicht.jpeg") center / cover;
 }
 
 .profile-card--quiet {
@@ -791,7 +794,7 @@ p {
 .profile-card span,
 .steps span {
   color: var(--accent);
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
 }
 
@@ -948,7 +951,7 @@ p {
 
 .video__meta strong {
   color: var(--text);
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -1081,7 +1084,7 @@ p {
   min-height: 402px;
   background:
     linear-gradient(180deg, rgba(18, 16, 12, 0.54), rgba(18, 16, 12, 0.92)),
-    url("../images/zigarrenkombinat_event_nicaragua_display.jpeg") center / cover;
+    url("/images/zigarrenkombinat_event_nicaragua_display.jpeg") center / cover;
 }
 
 .event-card__type {
@@ -1465,7 +1468,7 @@ p {
 .trust p {
   margin: 0;
   color: var(--muted);
-  font-family: "Sora", sans-serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.72;
   max-width: 34ch;
@@ -1527,7 +1530,7 @@ p {
 .faq summary {
   cursor: pointer;
   color: var(--text);
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-size: 1.12rem;
   list-style: none;
   text-transform: none;
@@ -1610,7 +1613,7 @@ p {
 .footer__title {
   margin: clamp(0.45rem, 1.2vw, 0.9rem) 0 clamp(0.7rem, 1.8vw, 1.25rem);
   color: var(--text);
-  font-family: "Oswald", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(4rem, 13vw, 11.5rem);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -1919,14 +1922,23 @@ p {
   }
 
   .profile__rail {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
+  .profile__intro {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .profile__intro .eyebrow,
   .profile__intro h2 {
     grid-column: 1;
     justify-self: start;
     text-align: left;
-    max-width: 14ch;
+  }
+
+  .profile__intro h2 {
+    max-width: 12ch;
   }
 
   .profile__intro p:last-child {
@@ -1958,7 +1970,12 @@ p {
   }
 
   .profile-card--wide,
-  .profile-card--quiet,
+  .profile-card--quiet {
+    grid-row: auto;
+    grid-column: auto;
+    min-height: 300px;
+  }
+
   .event-card:first-child {
     grid-row: auto;
     grid-column: span 2;
@@ -2232,8 +2249,10 @@ p {
   }
 
   .floating-video {
-    right: 0.65rem;
-    bottom: 0.65rem;
+    position: static;
+    right: auto;
+    bottom: auto;
+    margin: 1.25rem 1rem 0 auto;
     min-height: 42px;
     padding-inline: 0.8rem;
     font-size: 0.72rem;
