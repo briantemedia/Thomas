@@ -1,5 +1,5 @@
-import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent, type ReactNode } from "react";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 const IMG_BASE = "./images/";
 const HERO_IMAGE = `${IMG_BASE}zigarrenkombinat_zigarren_sortiert.png`;
@@ -8,8 +8,8 @@ const ABOUT_IMAGE = `${IMG_BASE}rike.jpeg`;
 const VIDEO_IMAGE = `${IMG_BASE}zigarrenkombinat_spirituosen_tasting_tisch.jpeg`;
 const NEWS_IMAGE = `${IMG_BASE}zigarrenkombinat_store_tresen_halbtotal.jpeg`;
 const EVENTS_IMAGE = `${IMG_BASE}zigarrenkombinat_event_nicaragua_display.jpeg`;
-// TODO: Ersetzen Sie den Platzhalter durch den finalen Gruppen-Einladungslink.
-const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/";
+const WHATSAPP_GROUP_MAILTO =
+  "mailto:zigarrenkombinat@web.de?subject=WhatsApp-Gruppe%20anfragen&body=Hallo%20Thomas%20und%20Rike,%0D%0Aich%20m%C3%B6chte%20eine%20Einladung%20zur%20WhatsApp-Gruppe.%0D%0AMeine%20Telefonnummer:%20";
 
 function usePageTitle(title: string) {
   useEffect(() => {
@@ -17,9 +17,145 @@ function usePageTitle(title: string) {
   }, [title]);
 }
 
+type AgeGateProps = {
+  open: boolean;
+  onAccept: () => void;
+};
+
+function AgeGate({ open, onAccept }: AgeGateProps) {
+  const [error, setError] = useState("");
+  const acceptButtonRef = useRef<HTMLButtonElement>(null);
+  const rejectButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(open);
+
+  useEffect(() => {
+    if (open) {
+      setError("");
+    }
+  }, [open]);
+
+  useEffect(() => {
+    const appContent = document.querySelector<HTMLElement>(".app-content");
+
+    if (open) {
+      wasOpenRef.current = true;
+      appContent?.setAttribute("inert", "");
+      appContent?.setAttribute("aria-hidden", "true");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+
+      const frame = window.requestAnimationFrame(() => {
+        acceptButtonRef.current?.focus();
+      });
+
+      return () => {
+        window.cancelAnimationFrame(frame);
+        appContent?.removeAttribute("inert");
+        appContent?.removeAttribute("aria-hidden");
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      };
+    }
+
+    appContent?.removeAttribute("inert");
+    appContent?.removeAttribute("aria-hidden");
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      const restoreSelectors = [
+        ".legal-back",
+        ".hero__actions .button--primary",
+        ".topbar__toggle",
+        ".topbar__nav-link",
+      ];
+      const restoreTarget = restoreSelectors
+        .map((selector) => document.querySelector<HTMLElement>(selector))
+        .find((node): node is HTMLElement => Boolean(node && node.getClientRects().length > 0));
+
+      window.requestAnimationFrame(() => {
+        restoreTarget?.focus();
+      });
+    }
+
+    return undefined;
+  }, [open]);
+
+  const onKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!open || event.key !== "Tab") {
+      return;
+    }
+
+    const focusables = [acceptButtonRef.current, rejectButtonRef.current].filter(Boolean) as HTMLElement[];
+    if (focusables.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const currentIndex = focusables.indexOf(document.activeElement as HTMLElement);
+    const nextIndex = event.shiftKey
+      ? currentIndex <= 0
+        ? focusables.length - 1
+        : currentIndex - 1
+      : currentIndex === focusables.length - 1
+        ? 0
+        : currentIndex + 1;
+
+    event.preventDefault();
+    focusables[nextIndex]?.focus();
+  };
+
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <div className="gate js-age-gate" data-state="visible">
+      <div
+        className="gate__card"
+        aria-describedby="age-gate-copy"
+        aria-labelledby="age-gate-title"
+        aria-modal="true"
+        onKeyDown={onKeyDown}
+        role="dialog"
+        tabIndex={-1}
+      >
+        <p className="gate__eyebrow">Zigarrenkombinat Eisenach</p>
+        <h2 className="gate__title" id="age-gate-title">
+          Eintritt ab 18 Jahren
+        </h2>
+        <p className="gate__copy" id="age-gate-copy">
+          Diese Website enthält Inhalte zu Zigarren, Wein und Spirituosen. Bitte bestätigen Sie, dass Sie volljährig
+          sind.
+        </p>
+        <div className="gate__actions">
+          <button ref={acceptButtonRef} className="gate__btn gate__btn--yes" data-age="yes" type="button" onClick={onAccept}>
+            Ja, ich bin 18+
+          </button>
+          <button
+            ref={rejectButtonRef}
+            className="gate__btn gate__btn--no"
+            data-age="no"
+            type="button"
+            onClick={() => setError("Bitte bestätigen Sie Ihre Volljährigkeit, um fortzufahren.")}
+          >
+            Nein
+          </button>
+        </div>
+        <p className="gate__note">Ihre Auswahl gilt nur für diesen Besuch.</p>
+        <p className="gate__error" data-age="error" aria-live="polite">
+          {error}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function HomePage() {
-  usePageTitle("ZIGARRENKOMBINAT | Eisenach");
+  usePageTitle("Zigarrenkombinat Eisenach | Fachgeschäft für Zigarren, Spirituosen & Accessories");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const mobileNavButtonRef = useRef<HTMLButtonElement>(null);
 
   const scrollToSection = (id: string) => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -44,53 +180,6 @@ function HomePage() {
     };
 
   useEffect(() => {
-    const gate = document.querySelector<HTMLElement>(".js-age-gate");
-    const yesButton = gate?.querySelector<HTMLButtonElement>("[data-age='yes']");
-    const noButton = gate?.querySelector<HTMLButtonElement>("[data-age='no']");
-    const errorNode = gate?.querySelector<HTMLElement>("[data-age='error']");
-
-    const params = new URLSearchParams(window.location.search);
-    const previewMode = params.get("preview") === "1";
-
-    const lockPage = (lock: boolean) => {
-      document.documentElement.style.overflow = lock ? "hidden" : "";
-      document.body.style.overflow = lock ? "hidden" : "";
-    };
-
-    const hideGate = () => {
-      if (gate) {
-        gate.dataset.state = "hidden";
-      }
-      lockPage(false);
-    };
-
-    document.documentElement.classList.toggle("preview-mode", previewMode);
-
-    if (gate) {
-      if (previewMode) {
-        hideGate();
-      } else {
-        gate.dataset.state = "visible";
-        lockPage(true);
-      }
-    }
-
-    const onYes = () => {
-      hideGate();
-      if (errorNode) {
-        errorNode.textContent = "";
-      }
-    };
-
-    const onNo = () => {
-      if (errorNode) {
-        errorNode.textContent = "Zugriff nicht erlaubt. Diese Seite ist nur für volljährige Besucher.";
-      }
-    };
-
-    yesButton?.addEventListener("click", onYes);
-    noButton?.addEventListener("click", onNo);
-
     const revealSections = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const revealSelector = [
@@ -145,10 +234,7 @@ function HomePage() {
     }
 
     return () => {
-      yesButton?.removeEventListener("click", onYes);
-      noButton?.removeEventListener("click", onNo);
       revealObserver?.disconnect();
-      lockPage(false);
     };
   }, []);
 
@@ -162,35 +248,34 @@ function HomePage() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  useEffect(() => {
+    if (!mobileNavOpen) {
+      return undefined;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      event.preventDefault();
+      setMobileNavOpen(false);
+      mobileNavButtonRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileNavOpen]);
+
   return (
     <>
-      <div className="gate js-age-gate" data-state="visible" aria-modal="true" role="dialog">
-        <div className="gate__card">
-          <p className="gate__eyebrow">Zigarrenkombinat Eisenach</p>
-          <h2 className="gate__title">Eintritt ab 18 Jahren</h2>
-          <p className="gate__copy">
-            Diese Website enthält Inhalte zu Zigarren, Wein und Spirituosen. Bitte bestätigen Sie, dass Sie volljährig
-            sind.
-          </p>
-          <div className="gate__actions">
-            <button className="gate__btn gate__btn--yes" data-age="yes" type="button">
-              Ja, ich bin 18+
-            </button>
-            <button className="gate__btn gate__btn--no" data-age="no" type="button">
-              Nein
-            </button>
-          </div>
-          <p className="gate__note">Ihre Auswahl gilt nur für diesen Besuch.</p>
-          <p className="gate__error" data-age="error" aria-live="polite"></p>
-        </div>
-      </div>
-
       <div className="page-shell" id="top">
         <header className="topbar" aria-label="Seitennavigation">
           <a className="topbar__brand" href="#top" onClick={onSectionLink("top")}>
             Zigarrenkombinat
           </a>
           <button
+            ref={mobileNavButtonRef}
             className="topbar__toggle"
             type="button"
             aria-expanded={mobileNavOpen}
@@ -224,14 +309,15 @@ function HomePage() {
         <main>
           <section className="hero reveal" data-reveal="up" aria-labelledby="hero-title">
             <figure className="hero__media">
-              <img src={HERO_IMAGE} alt="Rike und Thomas Geißler im Zigarrenkombinat Eisenach" />
+              <img src={HERO_IMAGE} alt="Auswahl sortierter Zigarren im Zigarrenkombinat Eisenach" />
             </figure>
             <div className="hero__shade"></div>
             <div className="hero__content">
-              <p className="eyebrow">ZIGARRENKOMBINAT · RIKE UND THOMAS GEIßLER</p>
-              <h1 id="hero-title">Ein guter Einkauf beginnt nicht im Warenkorb.</h1>
+              <p className="eyebrow">FACHGESCHÄFT IN EISENACH · RIKE UND THOMAS GEIßLER</p>
+              <h1 id="hero-title">Zigarrenkombinat Eisenach</h1>
               <p className="hero__lead">
-                Zigarren, Spirituosen, Wein und Zubehör. Fachlich beraten. Präzise empfohlen.
+                Ein guter Einkauf beginnt nicht im Warenkorb. Zigarren, Spirituosen und Accessories mit persönlicher
+                Beratung.
               </p>
               <div className="hero__actions" aria-label="Hauptaktionen">
                 <a className="button button--primary" href="#visit" onClick={onSectionLink("visit")}>
@@ -263,7 +349,7 @@ function HomePage() {
                 </a>
               </article>
               <figure className="host__portrait">
-                <img src={HOST_IMAGE} alt="Rike und Thomas Geißler im Fachgeschäft Zigarrenkombinat Eisenach" />
+                <img src={HOST_IMAGE} alt="Blick in das Fachgeschäft mit begehbarem Humidor und Treppe" />
               </figure>
               <aside className="host__points" aria-label="Beratungs-Vorteile">
                 <ul>
@@ -303,7 +389,7 @@ function HomePage() {
               </article>
 
               <figure className="about-panel__polaroid">
-                <img src={ABOUT_IMAGE} alt="Rike und Thomas Geißler im Fachgeschäft Zigarrenkombinat Eisenach" />
+                <img src={ABOUT_IMAGE} alt="Rike Geißler im Zigarrenkombinat Eisenach" />
               </figure>
             </div>
           </section>
@@ -383,7 +469,7 @@ function HomePage() {
           <section className="video wrapper section reveal" id="video" data-reveal="right" aria-labelledby="video-title">
             <div className="video__layout">
               <figure className="video__media">
-                <img src={VIDEO_IMAGE} alt="Getränk und Zigarren auf Holztisch im Zigarrenkombinat Eisenach" />
+                <img src={VIDEO_IMAGE} alt="Spirituosen und Zigarren auf dem Beratungstisch im Zigarrenkombinat Eisenach" />
               </figure>
 
               <article className="video__content">
@@ -429,23 +515,18 @@ function HomePage() {
 
           <section className="events section reveal" id="events" data-reveal="up" aria-labelledby="events-title">
             <div className="wrapper section-heading">
-              <h2 id="events-title">Aktuelle Termine per WhatsApp</h2>
+              <h2 id="events-title">WhatsApp-Gruppe auf Anfrage</h2>
             </div>
             <div className="events-whatsapp wrapper">
               <article className="events-whatsapp__card" style={{ backgroundImage: `url(${EVENTS_IMAGE})` }}>
-                <p className="event-card__type">WhatsApp-Gruppe</p>
-                <h3>Alle Events auf einen Blick.</h3>
+                <p className="event-card__type">Hinweis</p>
+                <h3>Termine direkt per E-Mail anfragen.</h3>
                 <p>
-                  Alle Tasting-Termine, Zigarrenlausch-Abende und kurzfristigen Plätze finden Sie in unserer
-                  WhatsApp-Gruppe. So sind Sie direkt informiert, sobald neue Termine feststehen.
+                  Schicken Sie uns Ihre Telefonnummer per E-Mail. Wir laden Sie dann persönlich in die WhatsApp-Gruppe
+                  ein, damit Sie neue Termine direkt von uns erhalten.
                 </p>
-                <a
-                  href={WHATSAPP_GROUP_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Zur WhatsApp-Gruppe wechseln"
-                >
-                  Zur WhatsApp-Gruppe
+                <a href={WHATSAPP_GROUP_MAILTO} aria-label="E-Mail schreiben und Telefonnummer senden">
+                  E-Mail schreiben
                 </a>
               </article>
             </div>
@@ -460,10 +541,10 @@ function HomePage() {
             <div className="contact-merged__row contact-merged__row--newsletter" id="newsletter" aria-labelledby="newsletter-title">
               <div className="journal__text">
                 <p className="eyebrow">Newsletter</p>
-                <h2 id="newsletter-title">Immer auf dem neuesten Stand</h2>
+                <h2 id="newsletter-title">Newsletter per E-Mail anfragen</h2>
                 <p>
-                  Hinterlassen Sie uns Ihre Handynummer und wir fügen Sie zur WhatsApp Gruppe hinzu. So sind Sie immer
-                  zeitnah informiert, ohne Spam.
+                  Wenn Sie Termine und Hinweise lieber persönlich per E-Mail erhalten möchten, senden Sie uns hier Ihre
+                  Adresse. Wir melden uns anschließend manuell bei Ihnen.
                 </p>
               </div>
               <form
@@ -472,12 +553,12 @@ function HomePage() {
                 method="post"
                 encType="text/plain"
               >
-                <label htmlFor="newsletter-phone" className="sr-only">
-                  Handynummer
+                <label htmlFor="newsletter-email" className="sr-only">
+                  E-Mail-Adresse
                 </label>
                 <div className="newsletter-form__row">
-                  <input id="newsletter-phone" name="phone" type="tel" placeholder="Handynummer" required />
-                  <button type="submit">Eintragen</button>
+                  <input id="newsletter-email" name="email" type="email" placeholder="Ihre E-Mail-Adresse" required />
+                  <button type="submit">Anfrage senden</button>
                 </div>
               </form>
               <figure className="journal__visual" aria-hidden="true">
@@ -741,12 +822,21 @@ function JugendschutzPage() {
 }
 
 export default function App() {
+  const previewBypass = import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "1";
+  const [ageGateOpen, setAgeGateOpen] = useState(!previewBypass);
+
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/impressum" element={<ImpressumPage />} />
-      <Route path="/datenschutz" element={<DatenschutzPage />} />
-      <Route path="/jugendschutz" element={<JugendschutzPage />} />
-    </Routes>
+    <>
+      <AgeGate open={ageGateOpen} onAccept={() => setAgeGateOpen(false)} />
+      <div className="app-content">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/impressum" element={<ImpressumPage />} />
+          <Route path="/datenschutz" element={<DatenschutzPage />} />
+          <Route path="/jugendschutz" element={<JugendschutzPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </>
   );
 }
