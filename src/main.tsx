@@ -16,6 +16,14 @@ import "@fontsource/sora/700.css";
 import "./common.css";
 import "../style.css";
 
+const GH_PAGES_RESTORE_KEY = "zigarrenkombinat:redirect-path";
+const restoredPath = sessionStorage.getItem(GH_PAGES_RESTORE_KEY);
+
+if (restoredPath) {
+  sessionStorage.removeItem(GH_PAGES_RESTORE_KEY);
+  window.history.replaceState(null, "", restoredPath);
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>

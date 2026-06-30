@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zigarrenkombinat Eisenach</title>
+    <script>
+      (function () {
+        try {
+          sessionStorage.setItem(
+            "zigarrenkombinat:redirect-path",
+            window.location.pathname + window.location.search + window.location.hash
+          );
+        } catch (error) {}
+        window.location.replace("./");
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
